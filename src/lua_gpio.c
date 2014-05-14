@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <periphery/src/gpio.h>
+#include <c-periphery/src/gpio.h>
 #include "lua_periphery.h"
 
 /*

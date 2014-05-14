@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <periphery/src/serial.h>
+#include <c-periphery/src/serial.h>
 #include "lua_periphery.h"
 
 /*

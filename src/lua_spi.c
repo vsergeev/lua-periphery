@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <periphery/src/spi.h>
+#include <c-periphery/src/spi.h>
 #include "lua_periphery.h"
 
 /*

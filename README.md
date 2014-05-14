@@ -132,13 +132,13 @@ Build the lua-periphery library.
 
 ``` console
 $ make clean all
-cd periphery; make clean
-make[1]: Entering directory '/home/anteater/projects-software/c-periphery'
+cd c-periphery; make clean
+make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
-make[1]: Leaving directory '/home/anteater/projects-software/c-periphery'
+make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
-cd periphery; make
-make[1]: Entering directory '/home/anteater/projects-software/c-periphery'
+cd c-periphery; make
+make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
 gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
 gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
@@ -146,8 +146,8 @@ gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/
 gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
 gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
-make[1]: Leaving directory '/home/anteater/projects-software/c-periphery'
-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c periphery/periphery.a -o periphery.so -shared 
+make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
+gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
 $
 ```
 
@@ -159,13 +159,13 @@ Specify the `CROSS` environment variable with the cross-compiler prefix to build
 
 ``` console
 $ CROSS=arm-linux- make clean all
-cd periphery; make clean
-make[1]: Entering directory '/home/anteater/projects-software/c-periphery'
+cd c-periphery; make clean
+make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
-make[1]: Leaving directory '/home/anteater/projects-software/c-periphery'
+make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
-cd periphery; make
-make[1]: Entering directory '/home/anteater/projects-software/c-periphery'
+cd c-periphery; make
+make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
@@ -173,8 +173,8 @@ arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPI
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
-make[1]: Leaving directory '/home/anteater/projects-software/c-periphery'
-arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c periphery/periphery.a -o periphery.so -shared 
+make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
+arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
 $ file periphery.so
 periphery.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
 $

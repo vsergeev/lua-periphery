@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <periphery/src/mmio.h>
+#include <c-periphery/src/mmio.h>
 #include "lua_periphery.h"
 
 /*

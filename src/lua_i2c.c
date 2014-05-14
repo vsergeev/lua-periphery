@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <periphery/src/i2c.h>
+#include <c-periphery/src/i2c.h>
 #include "lua_periphery.h"
 
 /*
