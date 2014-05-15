@@ -134,7 +134,7 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 
 ## Building
 
-Clone lua-periphery recrusively to also fetch c-periphery, which lua-periphery is built on.
+Clone lua-periphery recursively to also fetch [c-periphery](https://github.com/vsergeev/c-periphery), which lua-periphery is built on.
 
 ``` console
 $ git clone https://github.com/vsergeev/lua-periphery.git --recursive
@@ -145,12 +145,11 @@ Build the lua-periphery library.
 
 ``` console
 $ make clean all
-if [ -f c-periphery/Makefile ]; then cd c-periphery; make clean; fi;
+cd c-periphery; make clean;
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
-if [ ! -f c-periphery/Makefile ]; then git submodule update --init; fi;
 cd c-periphery; make
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
@@ -173,12 +172,11 @@ Set the `CC` environment variable with the cross-compiler when calling make, and
 
 ``` console
 $ CC=arm-linux-gcc make clean all
-if [ -f c-periphery/Makefile ]; then cd c-periphery; make clean; fi;
+cd c-periphery; make clean;
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
-if [ ! -f c-periphery/Makefile ]; then git submodule update --init; fi;
 cd c-periphery; make
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
