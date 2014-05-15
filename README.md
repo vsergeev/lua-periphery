@@ -2,7 +2,7 @@
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a Lua 5.2 library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. lua-periphery may be useful in embedded Linux environments (including BeagleBone, Raspberry PI, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.2, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.2 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
 ## Examples
 
