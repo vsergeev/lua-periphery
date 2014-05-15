@@ -11,7 +11,9 @@ lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O i
 ``` lua
 local GPIO = require('periphery').GPIO
 
+-- Open GPIO 10 with input direction
 local gpio_in = GPIO(10, "in")
+-- Open GPIO 12 with output direction
 local gpio_out = GPIO(12, "out")
 
 local value = gpio_in:read()
@@ -20,6 +22,8 @@ gpio_out:write(not value)
 gpio_in:close()
 gpio_out:close()
 ```
+
+[Go to GPIO documentation.](docs/gpio.md)
 
 ### SPI
 
@@ -38,11 +42,14 @@ print(string.format("shifted in  {0x%02x, 0x%02x, 0x%02x, 0x%02x}", unpack(data_
 spi:close()
 ```
 
+[Go to SPI documentation.](docs/spi.md)
+
 ### I2C
 
 ``` lua
 local I2C = require('periphery').I2C
 
+-- Open i2c-0 controller
 local i2c = I2C("/dev/i2c-0")
 
 --- Read byte at address 0x100 of EEPROM at 0x50
@@ -52,6 +59,8 @@ print(string.format("0x100: 0x%02x", msgs[2][1]))
 
 i2c:close()
 ```
+
+[Go to I2C documentation.](docs/i2c.md)
 
 ### MMIO
 
@@ -78,6 +87,8 @@ local mac_id0_hi = ctrl_mmio:read32(0x634)
 print(string.format("MAC address: %04x%08x", mac_id0_lo, mac_id0_hi))
 ```
 
+[Go to MMIO documentation.](docs/mmio.md)
+
 ### Serial
 
 ``` lua
@@ -94,6 +105,8 @@ print(string.format("read %d bytes: _%s_", #buf, buf))
 
 serial:close()
 ```
+
+[Go to Serial documentation.](docs/serial.md)
 
 ### Error Handling
 
@@ -156,7 +169,7 @@ The lua-periphery library is `periphery.so`.
 
 ### Cross-compilation
 
-Set the `CC` environment variable with the cross-compiler when calling make:
+Set the `CC` environment variable with the cross-compiler when calling make, and build is usual.
 
 ``` console
 $ CC=arm-linux-gcc make clean all
@@ -184,7 +197,7 @@ $
 
 ## Installation
 
-Place `periphery.so` in a directory searched by the Lua `package.path` variable. For examples: `/usr/lib/lua/5.2/periphery`, the same directory as other Lua sources, etc.
+Place `periphery.so` in a directory searched by the Lua `package.path` variable. For example: `/usr/lib/lua/5.2/periphery`, the same directory as other Lua sources, etc.
 
 lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
