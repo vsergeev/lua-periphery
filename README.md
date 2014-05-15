@@ -132,22 +132,23 @@ Build the lua-periphery library.
 
 ``` console
 $ make clean all
-cd c-periphery; make clean
+if [ -f c-periphery/Makefile ]; then cd c-periphery; make clean; fi;
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
+if [ ! -f c-periphery/Makefile ]; then git submodule update --init; fi;
 cd c-periphery; make
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
+cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
+cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
+cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
+cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
+cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
+cc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
 $
 ```
 
@@ -155,15 +156,16 @@ The lua-periphery library is `periphery.so`.
 
 ### Cross-compilation
 
-Specify the `CROSS` environment variable with the cross-compiler prefix to build lua-periphery with a cross-compiler.
+Set the `CC` environment variable with the cross-compiler when calling make:
 
 ``` console
-$ CROSS=arm-linux- make clean all
-cd c-periphery; make clean
+$ CC=arm-linux-gcc make clean all
+if [ -f c-periphery/Makefile ]; then cd c-periphery; make clean; fi;
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.so
+if [ ! -f c-periphery/Makefile ]; then git submodule update --init; fi;
 cd c-periphery; make
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
@@ -174,7 +176,7 @@ arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPI
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I/usr/include -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
+arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
 $ file periphery.so
 periphery.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
 $
@@ -182,7 +184,7 @@ $
 
 ## Installation
 
-Place `periphery.so` in a directory searched by the Lua `package.path` variable. Examples: same directory, `/usr/lib/lua/5.2/`, etc.
+Place `periphery.so` in a directory searched by the Lua `package.path` variable. For examples: `/usr/lib/lua/5.2/periphery`, the same directory as other Lua sources, etc.
 
 lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
