@@ -1,4 +1,4 @@
-# lua-periphery v1.0.0
+# lua-periphery v1.0.1
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 
@@ -13,17 +13,17 @@ $ luarocks build lua-periphery
 
 Install x86_64 binary rock with luarocks:
 ``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86_64.rock
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86_64.rock
 ```
 
 Install x86_32 binary rock with luarocks:
 ``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86.rock
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86.rock
 ```
 
 Install arm binary rock with luarocks:
 ``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-arm.rock
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-arm.rock
 ```
 
 Build and install directly from source:
