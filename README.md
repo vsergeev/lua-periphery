@@ -11,17 +11,17 @@ Build and install with luarocks:
 $ luarocks build lua-periphery
 ```
 
-Install linux-x86_64 binary rock with luarocks:
+Install x86_64 binary rock with luarocks:
 ``` console
 $ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86_64.rock
 ```
 
-Install linux-x86_32 binary rock with luarocks:
+Install x86_32 binary rock with luarocks:
 ``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86_32.rock
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86.rock
 ```
 
-Install linux-arm binary rock with luarocks:
+Install arm binary rock with luarocks:
 ``` console
 $ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-arm.rock
 ```
