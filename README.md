@@ -4,6 +4,37 @@
 
 lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.2 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
+## Installation
+
+Build and install with luarocks:
+``` console
+$ luarocks build lua-periphery
+```
+
+Install linux-x86_64 binary rock with luarocks:
+``` console
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86_64.rock
+```
+
+Install linux-x86_32 binary rock with luarocks:
+``` console
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-x86_32.rock
+```
+
+Install linux-arm binary rock with luarocks:
+``` console
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.0/lua-periphery-1.0.0-1.linux-arm.rock
+```
+
+Build and install directly from source:
+``` console
+$ git clone --recursive https://github.com/vsergeev/lua-periphery.git
+$ cd lua-periphery
+$ make clean all
+$ cp periphery.so /path/to/lua/libs/
+```
+Cross-compile with `CC=cross-here-gcc make clean all`.
+
 ## Examples
 
 ### GPIO
