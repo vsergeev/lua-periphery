@@ -200,7 +200,7 @@ static int lua_gpio_poll(lua_State *L) {
     if ((ret = gpio_poll(gpio, timeout_ms)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
 
-    lua_pushinteger(L, ret);
+    lua_pushboolean(L, ret > 0);
 
     return 1;
 }

@@ -18,7 +18,7 @@ gpio = GPIO{pin=<number>, direction=<string>} -> <GPIO object>
 -- Methods
 gpio:read() -> <boolean>
 gpio:write(value <boolean>)
-gpio:poll(timeout_ms <number>) -> <number>
+gpio:poll(timeout_ms <number>) -> <boolean>
 gpio:close()
 
 -- Properties
@@ -87,13 +87,13 @@ Raises a [GPIO error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-gpio:poll(timeout_ms <number>)
+gpio:poll(timeout_ms <number>) -> <boolean>
 ```
 Poll a GPIO for the edge event configured with the `.edge` property.
 
-`timeout_ms` can be positive number for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
+`timeout_ms` can be a positive number for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
 
-Returns 1 on success (an edge event occurred), 0 on timeout. Raises a [GPIO error](#errors) on failure.
+Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 

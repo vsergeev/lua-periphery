@@ -122,17 +122,17 @@ function test_loopback()
     print("Check poll faliing 1 -> 0 interrupt")
     passert_periphery_success("set gpio in edge falling", function () gpio_in.edge = "falling" end)
     passert_periphery_success("write gpio out low", function () gpio_out:write(false) end)
-    passert("gpio in polled 1", gpio_in:poll(1000) == 1)
+    passert("gpio in polled 1", gpio_in:poll(1000) == true)
     passert("value is low", gpio_in:read() == false)
     -- Check poll rising 0 -> 1 interrupt
     print("Check poll faliing 0 -> 1 interrupt")
     passert_periphery_success("set gpio in edge rising", function () gpio_in.edge = "rising" end)
     passert_periphery_success("write gpio out high", function () gpio_out:write(true) end)
-    passert("gpio in polled 1", gpio_in:poll(1000) == 1)
+    passert("gpio in polled 1", gpio_in:poll(1000) == true)
     passert("value is high", gpio_in:read() == true)
 
     -- Check poll timeout
-    passert("poll timed out", gpio_in:poll(1000) == 0)
+    passert("poll timed out", gpio_in:poll(1000) == false)
 
     passert_periphery_success("close gpio in", function () gpio_in:close() end)
     passert_periphery_success("close gpio out", function () gpio_out:close() end)
