@@ -57,7 +57,7 @@ GPIO(pin <number>, direction <string>) -> <GPIO object>
 GPIO{pin=<number>, direction=<string>} -> <GPIO object>
 ```
 
-Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the specified direction. Directoin can be "in", "out", "low", or "high" (see [constants](#constants) above).
+Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the specified direction. Direction can be "in", "out", "low", or "high" (see [constants](#constants) above).
 
 Example:
 ``` lua
