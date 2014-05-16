@@ -9,11 +9,11 @@ local periphery = require('periphery')
 local GPIO = periphery.GPIO
 
 -- Module Version
-GPIO.version                immutable <string>
+GPIO.version                <string>
 
 -- Constructor
-gpio = GPIO(pin <number>, direction <string>) -> <GPIO object>
-gpio = GPIO{pin=<number>, direction=<string>} -> <GPIO object>
+gpio = GPIO(pin <number>, direction <string>)
+gpio = GPIO{pin=<number>, direction=<string>}
 
 -- Methods
 gpio:read() -> <boolean>
@@ -29,7 +29,7 @@ gpio.direction              mutable <string>
 gpio.edge                   mutable <string>
 ```
 
-### ENUMERATIONS
+### CONSTANTS
 
 * GPIO Direction
     * "in": In
@@ -50,19 +50,20 @@ Property GPIO.version   immutable <string>
 ```
 Version of GPIO module as a string (e.g. "1.0.0").
 
-Raises an error on assignment.
-
 --------------------------------------------------------------------------------
 
 ``` lua
 GPIO(pin <number>, direction <string>) -> <GPIO object>
 GPIO{pin=<number>, direction=<string>} -> <GPIO object>
+```
 
-e.g.
+Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the specified direction. Directoin can be "in", "out", "low", or "high" (see [constants](#constants) above).
+
+Example:
+``` lua
 gpio = GPIO(23, "out")
 gpio = GPIO{pin=23, direction="out"}
 ```
-Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the specified direction.
 
 Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
 
@@ -136,7 +137,7 @@ Raises a [GPIO error](#errors) on assignment.
 ``` lua
 Property gpio.direction     mutable <string>
 ```
-Get or set the GPIO's direction. Can be "in", "out".
+Get or set the GPIO's direction. Can be "in", or "out" (see [constants](#constants) above).
 
 Raises a [GPIO error](#errors) on assignment with invalid direction.
 
@@ -145,13 +146,13 @@ Raises a [GPIO error](#errors) on assignment with invalid direction.
 ``` lua
 Property gpio.edge          mutable <string>
 ```
-Get or set the GPIO's interrupt edge. Can be "none", "rising", "falling", "both".
+Get or set the GPIO's interrupt edge. Can be "none", "rising", "falling", or "both" (see [constants](#constants) above).
 
-Raises a [GPIO error](#errors) on assignment with invalid edge specified or edge interrupts are not supported.
+Raises a [GPIO error](#errors) on assignment with an invalid edge or if edge interrupts are not supported.
 
 ### ERRORS
 
-The periphery GPIO methods and properties may raise a Lua error on failure that may be propagated to the user or caught with Lua's `pcall()`. The error object raised is a table with `code`, `c_errno`, `message` properties, which contain the error code string, underlying C error number, and a descriptive message string of the error, respectively. The error object also provides the necessary metamethod to be formatted cleanly if it is propagated to the user by the interpeter.
+The periphery GPIO methods and properties may raise a Lua error on failure that can be propagated to the user or caught with Lua's `pcall()`. The error object raised is a table with `code`, `c_errno`, `message` properties, which contain the error code string, underlying C error number, and a descriptive message string of the error, respectively. The error object also provides the necessary metamethod for it to be formatted if it is propagated to the user by the interpreter.
 
 ``` lua
 --- Example of error propagated to user
@@ -190,7 +191,9 @@ false
 ``` lua
 local GPIO = require('periphery').GPIO
 
+-- Open GPIO 10 with input direction
 local gpio_in = GPIO(10, "in")
+-- Open GPIO 12 with output direction
 local gpio_out = GPIO(12, "out")
 
 local value = gpio_in:read()

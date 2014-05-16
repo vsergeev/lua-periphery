@@ -8,7 +8,7 @@ Module for GPIO, SPI, I2C, MMIO, and Serial Linux peripheral I/O interfaces.
 local periphery = require('periphery')
 
 -- Module Version
-periphery.version   immutable <string>
+periphery.version   <string>
 
 -- Submodules
 periphery.GPIO
@@ -30,8 +30,6 @@ Property periphery.version  immutable <string>
 ```
 Version of periphery module as a string (e.g. "1.0.0").
 
-Raises an error on assignment.
-
 --------------------------------------------------------------------------------
 
 ``` lua
@@ -44,28 +42,28 @@ GPIO module. See [GPIO documentation](gpio.md) for more information.
 ``` lua
 periphery.SPI
 ```
-SPI module. See [SPI documentation](gpio.md) for more information.
+SPI module. See [SPI documentation](spi.md) for more information.
 
 --------------------------------------------------------------------------------
 
 ``` lua
 periphery.I2C
 ```
-I2C module. See [I2C documentation](gpio.md) for more information.
+I2C module. See [I2C documentation](i2c.md) for more information.
 
 --------------------------------------------------------------------------------
 
 ``` lua
 periphery.MMIO
 ```
-MMIO module. See [MMIO documentation](gpio.md) for more information.
+MMIO module. See [MMIO documentation](mmio.md) for more information.
 
 --------------------------------------------------------------------------------
 
 ``` lua
 periphery.Serial
 ```
-Serial module. See [Serial documentation](gpio.md) for more information.
+Serial module. See [Serial documentation](serial.md) for more information.
 
 --------------------------------------------------------------------------------
 
