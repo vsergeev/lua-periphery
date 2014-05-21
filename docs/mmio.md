@@ -12,17 +12,17 @@ local MMIO = periphery.MMIO
 MMIO.version    <string>
 
 -- Constructor
-mmio = MMIO(address <physical address number>, size <number>)
-mmio = MMIO{address=<physical address number>, size=<number>}
+mmio = MMIO(address <number>, size <number>)
+mmio = MMIO{address=<number>, size=<number>}
 
 -- Methods
 mmio:read32(offset <number>) -> <number>
 mmio:read16(offset <number>) -> <number>
 mmio:read8(offset <number>) -> <number>
 mmio:read(offset <number>, length <number>) -> <table>
-mmio:write32(offset <number>, value <32-bit number>)
-mmio:write16(offset <number>, value <16-bit number>)
-mmio:write8(offset <number>, value <8-bit number>)
+mmio:write32(offset <number>, value <number>)
+mmio:write16(offset <number>, value <number>)
+mmio:write8(offset <number>, value <number>)
 mmio:write(offset <number>, data <table>)
 mmio:close()
 
@@ -41,8 +41,8 @@ Version of MMIO module as a string (e.g. "1.0.0").
 --------------------------------------------------------------------------------
 
 ``` lua
-MMIO(address <physical address number>, size <number>) -> <MMIO Object>
-MMIO{address=<physical address number>, size=<number>} -> <MMIO Object>
+MMIO(address <number>, size <number>) -> <MMIO Object>
+MMIO{address=<number>, size=<number>} -> <MMIO Object>
 ```
 Instantiate an MMIO object and map in the region of physical memory specified by the `address` base physical address and `size` size in bytes.
 
@@ -52,7 +52,7 @@ mmio = MMIO(0x40000000, 4096)
 mmio = MMIO{address=0x40001000, 0x1000}
 ```
 
-Returns a new MMIO object on success. Raises a [MMIO error](#errors) on failure.
+Returns a new MMIO object on success. Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ mmio:read8(offset <number>) -> <number>
 ```
 Read 32-bits, 16-bits, or 8-bits, respectively, from the mapped physical memory, starting at the specified byte offset, relative to the base physical address the MMIO object was opened with.
 
-Return the read unsigned integer on success. Raises a [MMIO error](#errors) on failure.
+Returns the read unsigned integer on success. Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
@@ -78,18 +78,18 @@ data = mmio:read(0x100, 4)
 -- data is {0xff, 0xff, 0xff, 0xff}
 ```
 
-Return the read bytes in a table array. Raises a [MMIO error](#errors) on failure.
+Returns the read bytes in a table array. Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
 ``` lua
-mmio:write32(offset <number>, value <32-bit number>)
-mmio:write16(offset <number>, value <16-bit number>)
-mmio:write8(offset <number>, value <8-bit number>)
+mmio:write32(offset <number>, value <number>)
+mmio:write16(offset <number>, value <number>)
+mmio:write8(offset <number>, value <number>)
 ```
 Write 32-bits, 16-bits, or 8-bits, respectively, to mapped physical memory, starting at the specified byte offset, relative to the base physical address the MMIO object was opened with.
 
-Raises a [MMIO error](#errors) on failure.
+Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ mmio:write(offset <number>, data <table>)
 ```
 Write an array of bytes to mapped physical memory, starting at the specified byte offset, relative to the base physical address the MMIO object was opened with.
 
-Raises a [MMIO error](#errors) on failure.
+Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
@@ -107,7 +107,7 @@ mmio:close()
 ```
 Unmap the MMIO object's mapped physical memory.
 
-Raises a [MMIO error](#errors) on failure.
+Raises an [MMIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
@@ -116,7 +116,7 @@ Property mmio.base      immutable <number>
 ```
 Get the base physical address the MMIO object was opened with.
 
-Raises a [MMIO error](#errors) on assignment.
+Raises an [MMIO error](#errors) on assignment.
 
 --------------------------------------------------------------------------------
 
@@ -125,7 +125,7 @@ Property mmio.size      immutable <number>
 ```
 Get the mapping size the MMIO object was opened with.
 
-Raises a [MMIO error](#errors) on assignment.
+Raises an [MMIO error](#errors) on assignment.
 
 ### ERRORS
 
@@ -174,6 +174,8 @@ local rtc_hrs = rtc_mmio:read32(0x08)
 
 print(string.format("hours: %02x minutes: %02x seconds: %02x", rtc_secs, rtc_mins, rtc_hrs))
 
+rtc_mmio:close()
+
 --- Open am335x control module page
 local ctrl_mmio = MMIO(0x44E10000, 0x1000)
 
@@ -182,5 +184,7 @@ local mac_id0_lo = ctrl_mmio:read32(0x630)
 local mac_id0_hi = ctrl_mmio:read32(0x634)
 
 print(string.format("MAC address: %04x %08x", mac_id0_lo, mac_id0_hi))
+
+ctrl_mmio:close()
 ```
 

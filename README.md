@@ -11,17 +11,17 @@ Build and install with luarocks:
 $ luarocks build lua-periphery
 ```
 
-Install x86_64 binary rock with luarocks:
+Install x86-64 binary rock with luarocks:
 ``` console
 $ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86_64.rock
 ```
 
-Install x86_32 binary rock with luarocks:
+Install x86-32 binary rock with luarocks:
 ``` console
 $ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86.rock
 ```
 
-Install arm binary rock with luarocks:
+Install ARM binary rock with luarocks:
 ``` console
 $ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-arm.rock
 ```
@@ -108,6 +108,8 @@ local rtc_hrs = rtc_mmio:read32(0x08)
 
 print(string.format("hours: %02x minutes: %02x seconds: %02x", rtc_secs, rtc_mins, rtc_hrs))
 
+rtc_mmio:close()
+
 --- Open am335x control module page
 local ctrl_mmio = MMIO(0x44E10000, 0x1000)
 
@@ -116,6 +118,8 @@ local mac_id0_lo = ctrl_mmio:read32(0x630)
 local mac_id0_hi = ctrl_mmio:read32(0x634)
 
 print(string.format("MAC address: %04x %08x", mac_id0_lo, mac_id0_hi))
+
+ctrl_mmio:close()
 ```
 
 [Go to MMIO documentation.](docs/mmio.md)
@@ -226,7 +230,7 @@ $
 
 ## Installation
 
-Place `periphery.so` in a directory searched by the Lua `package.path` variable. For example: `/usr/lib/lua/5.2/periphery`, the same directory as other Lua sources, etc.
+Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.2/`, the same directory as other Lua sources, etc.
 
 lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
