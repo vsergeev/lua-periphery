@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "lua_periphery.h"
+#include "lua_51compat.h"
 
 LUALIB_API int luaopen_periphery_gpio(lua_State *L);
 LUALIB_API int luaopen_periphery_spi(lua_State *L);

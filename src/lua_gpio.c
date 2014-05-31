@@ -17,6 +17,7 @@
 
 #include <c-periphery/src/gpio.h>
 #include "lua_periphery.h"
+#include "lua_51compat.h"
 
 /*
 local periphery = require('periphery')
