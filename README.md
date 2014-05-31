@@ -1,8 +1,8 @@
-# lua-periphery v1.0.1
+# lua-periphery v1.0.2
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.2 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.1 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
 ## Installation
 
@@ -11,19 +11,25 @@ Build and install with luarocks:
 $ luarocks build lua-periphery
 ```
 
-Install x86-64 binary rock with luarocks:
+or Install a binary rock with luarocks:
 ``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86_64.rock
-```
+# Lua 5.2 / linux x86-64
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86_64.rock
 
-Install x86-32 binary rock with luarocks:
-``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-x86.rock
-```
+# Lua 5.2 / linux x86-32
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86.rock
 
-Install ARM binary rock with luarocks:
-``` console
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.1/lua-periphery-1.0.1-1.linux-arm.rock
+# Lua 5.2 / linux arm
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-arm.rock
+
+# Lua 5.1 / linux x86-64
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86_64.rock
+
+# Lua 5.1 / linux x86-32
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86.rock
+
+# Lua 5.1 / linux arm
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-arm.rock
 ```
 
 Build and install directly from source:
