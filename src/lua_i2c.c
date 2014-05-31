@@ -19,25 +19,32 @@
 #include "lua_periphery.h"
 
 /*
-* I2C(device)
-* I2C{device=<device path>}
-* i2c:open(device)
-* i2c:open{device=<device path>}
-* i2c:transfer(address, messages)
-* i2c:close()
-* i2c:__tostring()
-* i2c:__index() / i2c::__newindex():
-    * R     i2c.fd
+local periphery = require('periphery')
+local I2C = periphery.I2C
 
-* Constants
-    * I2C.I2C_M_TEN
-    * I2C.I2C_M_RD
-    * I2C.I2C_M_STOP
-    * I2C.I2C_M_NOSTART
-    * I2C.I2C_M_REV_DIR_ADDR
-    * I2C.I2C_M_IGNORE_NAK
-    * I2C.I2C_M_NO_RD_ACK
-    * I2C.I2C_M_RECV_LEN
+-- Module Version
+I2C.version     <string>
+
+-- Constructor
+i2c = I2C(device <path string>)
+i2c = I2C{device=<path string>}
+
+-- Methods
+i2c:transfer(address <number>, messages <table>)
+i2c:close()
+
+-- Properties
+i2c.fd          immutable <number>
+
+-- Constants
+I2C.I2C_M_TEN
+I2C.I2C_M_RD
+I2C.I2C_M_STOP
+I2C.I2C_M_NOSTART
+I2C.I2C_M_REV_DIR_ADDR
+I2C.I2C_M_IGNORE_NAK
+I2C.I2C_M_NO_RD_ACK
+I2C.I2C_M_RECV_LEN
 */
 
 /* Define a new error for malloc() required in read/write */

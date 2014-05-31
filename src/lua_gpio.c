@@ -19,21 +19,28 @@
 #include "lua_periphery.h"
 
 /*
-* GPIO(pin, direction)
-* GPIO{pin=<pin>, direction=<direction>}
-* gpio:open(pin, direction)
-* gpio:open{pin=<pin>, direction=<direction>}
-* gpio:read()
-* gpio:write(value)
-* gpio:poll(timeout_ms)
-* gpio:close()
-* gpio:__tostring()
-* gpio:__index() / gpio:__newindex():
-    * R     gpio.fd
-    * R     gpio.pin
-    * R     gpio.supports_interrupts
-    * RW    gpio.direction
-    * RW    gpio.edge
+local periphery = require('periphery')
+local GPIO = periphery.GPIO
+
+-- Module Version
+GPIO.version                <string>
+
+-- Constructor
+gpio = GPIO(pin <number>, direction <string>)
+gpio = GPIO{pin=<number>, direction=<string>}
+
+-- Methods
+gpio:read() --> <boolean>
+gpio:write(value <boolean>)
+gpio:poll(timeout_ms <number>) --> <boolean>
+gpio:close()
+
+-- Properties
+gpio.fd                     immutable <number>
+gpio.pin                    immutable <number>
+gpio.supports_interrupts    immutable <boolean>
+gpio.direction              mutable <string>
+gpio.edge                   mutable <string>
 */
 
 static const char *gpio_error_code_strings[] = {

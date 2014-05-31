@@ -19,23 +19,30 @@
 #include "lua_periphery.h"
 
 /*
-* MMIO(address, size)
-* MMIO{address=<physical address>, size=<size>}
-* mmio:open(base, size)
-* mmio:open{base=<address>, size=<size}
-* mmio:close()
-* mmio:read32(offset)
-* mmio:read16(offset)
-* mmio:read8(offset)
-* mmio:write32(offset, value)
-* mmio:write16(offset, value)
-* mmio:write8(offset, value)
-* mmio:read(offset, length) -> { ... }
-* mmio:write(offset, data)
-* mmio:__tostring()
-* mmio:__index() / mmio:__newindex():
-    * R     mmio.base
-    * R     mmio.size
+local periphery = require('periphery')
+local MMIO = periphery.MMIO
+
+-- Module Version
+MMIO.version    <string>
+
+-- Constructor
+mmio = MMIO(address <number>, size <number>)
+mmio = MMIO{address=<number>, size=<number>}
+
+-- Methods
+mmio:read32(offset <number>) --> <number>
+mmio:read16(offset <number>) --> <number>
+mmio:read8(offset <number>) --> <number>
+mmio:read(offset <number>, length <number>) --> <table>
+mmio:write32(offset <number>, value <number>)
+mmio:write16(offset <number>, value <number>)
+mmio:write8(offset <number>, value <number>)
+mmio:write(offset <number>, data <table>)
+mmio:close()
+
+-- Properties
+mmio.base       immutable <number>
+mmio.size       immutable <number>
 */
 
 /* Define a new error for malloc() required in read/write */

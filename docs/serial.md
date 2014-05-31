@@ -16,13 +16,13 @@ serial = Serial(device <path string>, baudrate <number>)
 serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
 
 -- Methods
-serial:read(length <number>, [timeout <number>]) -> <string>
-serial:read{length=<length>, timeout=nil} -> <string>
-serial:write(data <string>) -> <number>
-serial:poll(timeout_ms) -> <boolean>
+serial:read(length <number>, [timeout <number>]) --> <string>
+serial:read{length=<length>, timeout=nil} --> <string>
+serial:write(data <string>) --> <number>
+serial:poll(timeout_ms) --> <boolean>
 serial:flush()
-serial:input_waiting() -> <number>
-serial:output_waiting() -> <number>
+serial:input_waiting() --> <number>
+serial:output_waiting() --> <number>
 serial:close()
 
 -- Properties
@@ -52,8 +52,8 @@ Version of Serial module as a string (e.g. "1.0.0").
 --------------------------------------------------------------------------------
 
 ``` lua
-Serial(device <path string>, baudrate <number>) -> <Serial object>
-Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false} -> <Serial object>
+Serial(device <path string>, baudrate <number>) --> <Serial object>
+Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false} --> <Serial object>
 ```
 
 Instantiate a serial object and open the `tty` device at the specified path with the specified baudrate, and the defaults of 8 data bits, no parity, 1 stop bit, no software flow control (xonxoff), and no hardware flow control (rtscts). Defaults may be overridden with the table constructor. Parity can be "none", "odd", "even" (see [constants](#constants) above).
@@ -69,8 +69,8 @@ Returns a new Serial object on success. Raises a [Serial error](#errors) on fail
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:read(length <number>, [timeout_ms <number>]) -> <string>
-serial:read{length=<length>, timeout_ms=nil} -> <string>
+serial:read(length <number>, [timeout_ms <number>]) --> <string>
+serial:read{length=<length>, timeout_ms=nil} --> <string>
 ```
 Read up to `length` number of bytes from the serial port with an optional timeout. `timeout_ms` can be 0 for a non-blocking read, negative for a blocking read that will block until `length` number of bytes are read, or positive specifying a timeout in milliseconds for a blocking read. The default is a blocking read that will block until `length` number of bytes are read.
 
@@ -79,7 +79,7 @@ For a non-blocking or timeout bound read, `read()` returns a string with the byt
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:write(data <string>) -> <number>
+serial:write(data <string>) --> <number>
 ```
 Write the specified `data` string to the serial port.
 
@@ -88,7 +88,7 @@ Returns the number of bytes written. Raises a [Serial error](#errors) on failure
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:poll(timeout) -> <boolean>
+serial:poll(timeout) --> <boolean>
 ```
 Poll for data available for reading from the serial port. `timeout` can be positive for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
 
@@ -106,7 +106,7 @@ Raises a [Serial error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:input_waiting() -> <number>
+serial:input_waiting() --> <number>
 ```
 Query the number of bytes waiting to be read from the serial port.
 
@@ -115,7 +115,7 @@ Returns the number of bytes. Raises a [Serial error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:output_waiting() -> <number>
+serial:output_waiting() --> <number>
 ```
 Query the number of bytes waiting to be written to the serial port.
 

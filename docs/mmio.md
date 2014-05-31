@@ -16,10 +16,10 @@ mmio = MMIO(address <number>, size <number>)
 mmio = MMIO{address=<number>, size=<number>}
 
 -- Methods
-mmio:read32(offset <number>) -> <number>
-mmio:read16(offset <number>) -> <number>
-mmio:read8(offset <number>) -> <number>
-mmio:read(offset <number>, length <number>) -> <table>
+mmio:read32(offset <number>) --> <number>
+mmio:read16(offset <number>) --> <number>
+mmio:read8(offset <number>) --> <number>
+mmio:read(offset <number>, length <number>) --> <table>
 mmio:write32(offset <number>, value <number>)
 mmio:write16(offset <number>, value <number>)
 mmio:write8(offset <number>, value <number>)
@@ -41,8 +41,8 @@ Version of MMIO module as a string (e.g. "1.0.0").
 --------------------------------------------------------------------------------
 
 ``` lua
-MMIO(address <number>, size <number>) -> <MMIO Object>
-MMIO{address=<number>, size=<number>} -> <MMIO Object>
+MMIO(address <number>, size <number>) --> <MMIO Object>
+MMIO{address=<number>, size=<number>} --> <MMIO Object>
 ```
 Instantiate an MMIO object and map in the region of physical memory specified by the `address` base physical address and `size` size in bytes.
 
@@ -57,9 +57,9 @@ Returns a new MMIO object on success. Raises an [MMIO error](#errors) on failure
 --------------------------------------------------------------------------------
 
 ``` lua
-mmio:read32(offset <number>) -> <number>
-mmio:read16(offset <number>) -> <number>
-mmio:read8(offset <number>) -> <number>
+mmio:read32(offset <number>) --> <number>
+mmio:read16(offset <number>) --> <number>
+mmio:read8(offset <number>) --> <number>
 ```
 Read 32-bits, 16-bits, or 8-bits, respectively, from the mapped physical memory, starting at the specified byte offset, relative to the base physical address the MMIO object was opened with.
 
@@ -68,7 +68,7 @@ Returns the read unsigned integer on success. Raises an [MMIO error](#errors) on
 --------------------------------------------------------------------------------
 
 ``` lua
-mmio:read(offset <number>, length <number>) -> <table>
+mmio:read(offset <number>, length <number>) --> <table>
 ```
 Read an array of bytes from the mapped physical memory, starting at the specified byte offset, relative to the base physical address the MMIO object was opened with.
 

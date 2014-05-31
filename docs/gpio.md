@@ -16,9 +16,9 @@ gpio = GPIO(pin <number>, direction <string>)
 gpio = GPIO{pin=<number>, direction=<string>}
 
 -- Methods
-gpio:read() -> <boolean>
+gpio:read() --> <boolean>
 gpio:write(value <boolean>)
-gpio:poll(timeout_ms <number>) -> <boolean>
+gpio:poll(timeout_ms <number>) --> <boolean>
 gpio:close()
 
 -- Properties
@@ -53,8 +53,8 @@ Version of GPIO module as a string (e.g. "1.0.0").
 --------------------------------------------------------------------------------
 
 ``` lua
-GPIO(pin <number>, direction <string>) -> <GPIO object>
-GPIO{pin=<number>, direction=<string>} -> <GPIO object>
+GPIO(pin <number>, direction <string>) --> <GPIO object>
+GPIO{pin=<number>, direction=<string>} --> <GPIO object>
 ```
 
 Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the specified direction. Direction can be "in", "out", "low", or "high" (see [constants](#constants) above).
@@ -70,7 +70,7 @@ Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-gpio:read() -> <boolean>
+gpio:read() --> <boolean>
 ```
 Read the state of the GPIO.
 
@@ -88,7 +88,7 @@ Raises a [GPIO error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-gpio:poll(timeout_ms <number>) -> <boolean>
+gpio:poll(timeout_ms <number>) --> <boolean>
 ```
 Poll a GPIO for the edge event configured with the `.edge` property.
 

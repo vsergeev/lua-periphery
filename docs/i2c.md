@@ -21,6 +21,16 @@ i2c:close()
 
 -- Properties
 i2c.fd          immutable <number>
+
+-- Constants
+I2C.I2C_M_TEN
+I2C.I2C_M_RD
+I2C.I2C_M_STOP
+I2C.I2C_M_NOSTART
+I2C.I2C_M_REV_DIR_ADDR
+I2C.I2C_M_IGNORE_NAK
+I2C.I2C_M_NO_RD_ACK
+I2C.I2C_M_RECV_LEN
 ```
 
 ### CONSTANTS
@@ -45,8 +55,8 @@ Version of I2C module as a string (e.g. "1.0.0").
 --------------------------------------------------------------------------------
 
 ``` lua
-I2C(device <path string>) -> <I2C object>
-I2C{device=<path string>} -> <I2C object>
+I2C(device <path string>) --> <I2C object>
+I2C{device=<path string>} --> <I2C object>
 ```
 Instantiate an I2C object and open the `i2c-dev` device at the specified path.
 

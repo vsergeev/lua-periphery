@@ -19,29 +19,34 @@
 #include "lua_periphery.h"
 
 /*
-* Serial(device, baudrate)
-* Serial{device=<device>, baudrate=<baudrate>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
-    * databits default to 8, parity default to "none", stopbits default to 1, xonxoff default to false, rtscts default to false
-* serial:open(device, baudrate)
-    * databits default to 8, parity default to "none", stopbits default to 1, xonxoff default to false, rtscts default to false
-* serial:open{device=<device>, baudrate=<baudrate>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
-* serial:read(length, [timeout])
-* serial:read{length=<length>, timeout=nil}
-* serial:write(data)
-* serial:flush()
-* serial:input_waiting()
-* serial:output_waiting()
-* serial:poll(timeout)
-* serial:close()
-* serial:__tostring()
-* serial:__index() / serial:__newindex():
-    * R     serial.fd
-    * RW    serial.baudrate
-    * RW    serial.databits
-    * RW    serial.parity
-    * RW    serial.stopbits
-    * RW    serial.xonxoff
-    * RW    serial.rtscts
+local periphery = require('periphery')
+local Serial = periphery.Serial
+
+-- Module Version
+Serial.version      <string>
+
+-- Constructor
+serial = Serial(device <path string>, baudrate <number>)
+serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
+
+-- Methods
+serial:read(length <number>, [timeout <number>]) --> <string>
+serial:read{length=<length>, timeout=nil} --> <string>
+serial:write(data <string>) --> <number>
+serial:poll(timeout_ms) --> <boolean>
+serial:flush()
+serial:input_waiting() --> <number>
+serial:output_waiting() --> <number>
+serial:close()
+
+-- Properties
+serial.baudrate     mutable <number>
+serial.databits     mutable <number>
+serial.parity       mutable <string>
+serial.stopbits     mutable <number>
+serial.xonxoff      mutable <boolean>
+serial.rtscts       mutable <boolean>
+serial.fd           immutable <number>
 */
 
 /* Define a new error for malloc() required in read/write */

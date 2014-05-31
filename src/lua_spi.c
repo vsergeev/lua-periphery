@@ -19,21 +19,27 @@
 #include "lua_periphery.h"
 
 /*
-* SPI(device, mode, max_speed)
-    * bit_order default to MSB first, bits_per_word default to 8
-* SPI{device=<device path>, mode=<bus mode>, max_speed=<max speed>, bit_order="msb", bits_per_word=8, extra_flags=0}
-* spi:open(device, mode, speed)
-* spi:open(device=<device path>, mode=<bus mode>, speed=<max speed>, bit_order="lsb", bits_per_word=8, extra_flags=0}
-* spi:transfer(data)
-* spi:close()
-* spi:__tostring()
-* spi:__index() / spi:__newindex():
-    * R     spi.fd
-    * RW    spi.mode
-    * RW    spi.max_speed
-    * RW    spi.bit_order
-    * RW    spi.bits_per_word
-    * RW    spi.extra_flags
+local periphery = require('periphery')
+local SPI = periphery.SPI
+
+-- Module Version
+SPI.version         <string>
+
+-- Constructor
+spi = SPI(device <path string>, mode <number>, max_speed <number>)
+spi = SPI{device=<path string>, mode=<number>, max_speed=<number>, bit_order="msb", bits_per_word=8, extra_flags=0}
+
+-- Methods
+spi:transfer(data <table>) --> <table>
+spi:close()
+
+-- Properties
+spi.fd              immutable <number>
+spi.mode            mutable <number>
+spi.max_speed       mutable <number>
+spi.bit_order       mutable <number>
+spi.bits_per_word   mutable <number>
+spi.extra_flags     mutable <number>
 */
 
 /* Define a new error for malloc() required in read/write */
