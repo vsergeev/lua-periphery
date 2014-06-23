@@ -2,46 +2,8 @@
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.1 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
-## Installation
-
-#### Build and install with luarocks
-``` console
-$ luarocks build lua-periphery
-```
-
-Cross-compile with `CC=cross-here-gcc luarocks build lua-periphery`.
-
-#### Install a binary rock with luarocks
-``` console
-# Lua 5.2 / linux x86-64
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86_64.rock
-
-# Lua 5.2 / linux x86-32
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86.rock
-
-# Lua 5.2 / linux arm
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-arm.rock
-
-# Lua 5.1 / linux x86-64
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86_64.rock
-
-# Lua 5.1 / linux x86-32
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86.rock
-
-# Lua 5.1 / linux arm
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-arm.rock
-```
-
-#### Build and install directly from source
-``` console
-$ git clone --recursive https://github.com/vsergeev/lua-periphery.git
-$ cd lua-periphery
-$ make clean all
-$ cp periphery.so /path/to/lua/libs/
-```
-Cross-compile with `CC=cross-here-gcc make clean all`.
 
 ## Examples
 
@@ -175,43 +137,58 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 > 
 ```
 
-## Building
+## Documentation
+
+`man` page style documentation for each interface wrapper is available in [docs](docs/) folder.
+
+## Installation
+
+#### Build and install with luarocks
+``` console
+$ luarocks build lua-periphery
+```
+
+Cross-compile with `CC=cross-here-gcc luarocks build lua-periphery`.
+
+#### Install a binary rock with luarocks
+``` console
+# Lua 5.2 / linux x86-64
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86_64.rock
+
+# Lua 5.2 / linux x86-32
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86.rock
+
+# Lua 5.2 / linux arm
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-arm.rock
+
+# Lua 5.1 / linux x86-64
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86_64.rock
+
+# Lua 5.1 / linux x86-32
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86.rock
+
+# Lua 5.1 / linux arm
+$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-arm.rock
+```
+
+#### Build and install directly from source
 
 Clone lua-periphery recursively to also fetch [c-periphery](https://github.com/vsergeev/c-periphery), which lua-periphery is built on.
 
 ``` console
-$ git clone https://github.com/vsergeev/lua-periphery.git --recursive
+$ git clone --recursive https://github.com/vsergeev/lua-periphery.git
 $ cd lua-periphery
-```
-
-Build the lua-periphery library.
-
-``` console
 $ make clean all
-cd c-periphery; make clean;
-make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
-make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-rm -rf periphery.so
-cd c-periphery; make
-make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-mkdir obj
-cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
-cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
-cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
-cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
-cc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
-ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
-make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-cc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
-$
+$ cp periphery.so /path/to/lua/libs/
 ```
 
-The lua-periphery library is `periphery.so`.
+Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.2/`, the same directory as other Lua sources, etc.
 
-### Cross-compilation
+lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
-Set the `CC` environment variable with the cross-compiler when calling make, and build is usual.
+#### Cross-compiling from Source
+
+To cross-compile, set the `CC` environment variable with the cross-compiler when calling make: `CC=cross-here-gcc make clean all`.
 
 ``` console
 $ CC=arm-linux-gcc make clean all
@@ -230,21 +207,11 @@ arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPI
 arm-linux-gcc -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so -shared
+arm-linux-gcc -Wall -Wextra -Wno-unused-parameter  -fPIC  -I. src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-pe
 $ file periphery.so
 periphery.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
 $
 ```
-
-## Installation
-
-Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.2/`, the same directory as other Lua sources, etc.
-
-lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
-
-## Documentation
-
-`man` page style documentation for each interface wrapper is available in [docs](docs/) folder.
 
 ## Testing
 
