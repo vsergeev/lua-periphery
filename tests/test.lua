@@ -6,8 +6,16 @@
 -- License: MIT
 --
 
-local STR_OK = " [\x1b[1;32m OK \x1b[0m]"
-local STR_FAIL = " [\x1b[1;31mFAIL\x1b[0m]"
+local STR_OK
+local STR_FAIL
+
+if _VERSION:match("%d.%d") == "5.1" then
+    STR_OK = " [ OK ]"
+    STR_FAIL = " [FAIL]"
+else
+    STR_OK = " [\x1b[1;32m OK \x1b[0m]"
+    STR_FAIL = " [\x1b[1;31mFAIL\x1b[0m]"
+end
 
 function ptest()
     local callerInfo = debug.getinfo(2, "ln")
@@ -67,7 +75,7 @@ function passert_periphery_success(name, func, code)
     if status then
         print(string.format("%s  %s %s():%d  %s", STR_OK, callerInfo.short_src, callerInfo.name, callerInfo.currentline, name))
     else
-        print(string.format("%s  %s %s():%d  %s    failed with error: %s", STR_FAIL, callerInfo.short_src, callerInfo.name, callerInfo.currentline, name, err))
+        print(string.format("%s  %s %s():%d  %s    failed with error: %s", STR_FAIL, callerInfo.short_src, callerInfo.name, callerInfo.currentline, name, tostring(err)))
         os.exit(1)
     end
 end
