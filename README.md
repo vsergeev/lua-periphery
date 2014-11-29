@@ -153,22 +153,28 @@ Cross-compile with `CC=cross-here-gcc luarocks build lua-periphery`.
 #### Install a binary rock with luarocks
 ``` console
 # Lua 5.2 / linux x86-64
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86_64.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86_64.rock -O lua-periphery-1.0.2-1.linux-x86_64.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-x86_64.rock
 
 # Lua 5.2 / linux x86-32
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-x86.rock -O lua-periphery-1.0.2-1.linux-x86.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-x86.rock
 
 # Lua 5.2 / linux arm
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-arm.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.2.linux-arm.rock -O lua-periphery-1.0.2-1.linux-arm.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-arm.rock
 
 # Lua 5.1 / linux x86-64
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86_64.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86_64.rock -O lua-periphery-1.0.2-1.linux-x86_64.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-x86_64.rock
 
 # Lua 5.1 / linux x86-32
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-x86.rock -O lua-periphery-1.0.2-1.linux-x86.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-x86.rock
 
 # Lua 5.1 / linux arm
-$ luarocks install https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-arm.rock
+$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.2/lua-periphery-1.0.2-1.lua-5.1.linux-arm.rock -O lua-periphery-1.0.2-1.linux-arm.rock
+$ luarocks install lua-periphery-1.0.2-1.linux-arm.rock
 ```
 
 #### Build and install directly from source
