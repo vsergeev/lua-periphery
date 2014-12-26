@@ -1,5 +1,5 @@
 LIB = periphery.so
-SOURCES = src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c
+SRCS = src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c
 
 C_PERIPHERY = c-periphery
 C_PERIPHERY_LIB = $(C_PERIPHERY)/periphery.a
@@ -16,20 +16,32 @@ endif
 
 ###########################################################################
 
-CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC $(LUA_CFLAGS) -I.
+CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC -I. $(LUA_CFLAGS)
 LDFLAGS += -shared
 
 ###########################################################################
 
+.PHONY: all
 all: $(LIB)
 
-$(LIB): $(C_PERIPHERY_LIB) $(SOURCES)
-	$(CC) $(CFLAGS) $(SOURCES) $(C_PERIPHERY_LIB) -o $@ $(LDFLAGS)
-
-$(C_PERIPHERY_LIB):
-	cd $(C_PERIPHERY); make
-
+.PHONY: clean
 clean:
-	cd $(C_PERIPHERY); make clean;
+	cd $(C_PERIPHERY) && $(MAKE) clean
 	rm -rf $(LIB)
+
+.PHONY: install
+install:
+	mkdir -p $(LUA_LIBDIR)
+	cp $(LIB) $(LUA_LIBDIR)/$(LIB)
+
+###########################################################################
+
+$(LIB): $(C_PERIPHERY_LIB) $(SRCS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) $(C_PERIPHERY_LIB) -o $@
+
+$(C_PERIPHERY_LIB): $(C_PERIPHERY)/Makefile
+	cd $(C_PERIPHERY); $(MAKE)
+
+$(C_PERIPHERY)/Makefile:
+	git clone git://github.com/vsergeev/c-periphery --depth 1 --branch v1.0.1
 
