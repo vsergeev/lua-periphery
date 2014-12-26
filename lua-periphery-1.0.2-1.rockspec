@@ -17,12 +17,11 @@ dependencies = {
     "lua >= 5.1",
 }
 build = {
-    type = "command",
-    build_command = "git clone git://github.com/vsergeev/c-periphery --depth 1 --branch v1.0.0 && LUA=$(LUA) LUA_INCDIR=$(LUA_INCDIR) make",
-    install = {
-       lib = {
-           ["periphery"] = "periphery.so",
-       },
+    type = "make",
+    variables = {
+        LUA_INCDIR = "$(LUA_INCDIR)",
+        LUA_LIBDIR = "$(LIBDIR)",
+        LUA_SHAREDIR = "$(LUADIR)",
     },
     copy_directories = { "docs" },
 }
