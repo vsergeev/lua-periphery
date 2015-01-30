@@ -363,13 +363,12 @@ LUALIB_API int luaopen_periphery_i2c(lua_State *L) {
     lua_pushstring(L, LUA_PERIPHERY_I2C_VERSION);
     lua_setfield(L, -2, "version");
 
-    /* Copy constants from <linux/i2c.h> */
+    /* Copy useful message flags from <linux/i2c.h> */
+    /* The constants below are available from kernel version 3.2 onwards */
     lua_pushunsigned(L, I2C_M_TEN);
     lua_setfield(L, -2, "I2C_M_TEN");
     lua_pushunsigned(L, I2C_M_RD);
     lua_setfield(L, -2, "I2C_M_RD");
-    lua_pushunsigned(L, I2C_M_STOP);
-    lua_setfield(L, -2, "I2C_M_STOP");
     lua_pushunsigned(L, I2C_M_NOSTART);
     lua_setfield(L, -2, "I2C_M_NOSTART");
     lua_pushunsigned(L, I2C_M_REV_DIR_ADDR);
@@ -380,6 +379,11 @@ LUALIB_API int luaopen_periphery_i2c(lua_State *L) {
     lua_setfield(L, -2, "I2C_M_NO_RD_ACK");
     lua_pushunsigned(L, I2C_M_RECV_LEN);
     lua_setfield(L, -2, "I2C_M_RECV_LEN");
+    /* I2C_M_STOP flag was added in kernel version 3.6 */
+    #ifdef I2C_M_STOP
+    lua_pushunsigned(L, I2C_M_STOP);
+    lua_setfield(L, -2, "I2C_M_STOP");
+    #endif
 
     return 1;
 }
