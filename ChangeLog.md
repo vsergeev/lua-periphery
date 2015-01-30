@@ -1,3 +1,6 @@
+* v1.0.4 - 01/29/2015
+    * Fix `I2C_M_STOP` undeclared compilation error on kernel versions older
+      than 3.6.
 * v1.0.3 - 12/26/2014
     * Improve LuaRocks build process.
     * Make unit tests compatible with Lua 5.1
