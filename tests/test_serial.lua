@@ -1,8 +1,6 @@
 --
 -- lua-periphery by vsergeev
--- Version 1.0.0 - May 2014
 -- https://github.com/vsergeev/lua-periphery
---
 -- License: MIT
 --
 
