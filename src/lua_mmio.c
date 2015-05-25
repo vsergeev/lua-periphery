@@ -15,7 +15,7 @@
 
 #include <c-periphery/src/mmio.h>
 #include "lua_periphery.h"
-#include "lua_51compat.h"
+#include "lua_compat.h"
 
 /*
 local periphery = require('periphery')
