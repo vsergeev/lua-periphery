@@ -43,5 +43,5 @@ $(C_PERIPHERY_LIB): $(C_PERIPHERY)/Makefile
 	cd $(C_PERIPHERY); $(MAKE)
 
 $(C_PERIPHERY)/Makefile:
-	git clone git://github.com/vsergeev/c-periphery --depth 1 --branch v1.0.2
+	git clone git://github.com/vsergeev/c-periphery --depth 1 --branch v1.0.3
 

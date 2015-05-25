@@ -300,7 +300,7 @@ static int lua_serial_flush(lua_State *L) {
 
 static int lua_serial_input_waiting(lua_State *L) {
     serial_t *serial;
-    int count;
+    unsigned int count;
     int ret;
 
     serial = luaL_checkudata(L, 1, "periphery.Serial");
@@ -314,7 +314,7 @@ static int lua_serial_input_waiting(lua_State *L) {
 
 static int lua_serial_output_waiting(lua_State *L) {
     serial_t *serial;
-    int count;
+    unsigned int count;
     int ret;
 
     serial = luaL_checkudata(L, 1, "periphery.Serial");
@@ -401,7 +401,7 @@ static int lua_serial_index(lua_State *L) {
         lua_pushunsigned(L, baudrate);
         return 1;
     } else if (strcmp(field, "databits") == 0) {
-        int databits;
+        unsigned int databits;
         int ret;
 
         if ((ret = serial_get_databits(serial, &databits)) < 0)
@@ -424,7 +424,7 @@ static int lua_serial_index(lua_State *L) {
         }
         return 1;
     } else if (strcmp(field, "stopbits") == 0) {
-        int stopbits;
+        unsigned int stopbits;
         int ret;
 
         if ((ret = serial_get_stopbits(serial, &stopbits)) < 0)
