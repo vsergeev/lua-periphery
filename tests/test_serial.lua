@@ -76,7 +76,7 @@ end
 
 function test_loopback()
     local serial = nil
-    local lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    local lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     local lorem_hugesum = nil
     local buf = nil
     local ret = nil
@@ -136,30 +136,30 @@ function test_interactive()
 
     passert_periphery_success("open serial", function () serial = Serial(device, 4800) end)
 
-    print("Starting interactive test. Get out your logic analyzer, buddy!");
-    print("Press enter to continue...");
+    print("Starting interactive test. Get out your logic analyzer, buddy!")
+    print("Press enter to continue...")
     io.read()
 
-    print("Press enter to start transfer...");
+    print("Press enter to start transfer...")
     io.read()
     passert("serial write", serial:write(buf) == #buf)
-    print("Serial transfer baudrate 4800, 8n1 occurred? y/n");
+    print("Serial transfer baudrate 4800, 8n1 occurred? y/n")
     passert("interactive success", io.read() == "y")
 
     passert_periphery_success("set baudrate to 9600", function () serial.baudrate = 9600 end)
 
-    print("Press enter to start transfer...");
+    print("Press enter to start transfer...")
     io.read()
     passert("serial write", serial:write(buf) == #buf)
-    print("Serial transfer baudrate 9600, 8n1 occurred? y/n");
+    print("Serial transfer baudrate 9600, 8n1 occurred? y/n")
     passert("interactive success", io.read() == "y")
 
     passert_periphery_success("set baudrate to 115200", function () serial.baudrate = 115200 end)
 
-    print("Press enter to start transfer...");
+    print("Press enter to start transfer...")
     io.read()
     passert("serial write", serial:write(buf) == #buf)
-    print("Serial transfer baudrate 115200, 8n1 occurred? y/n");
+    print("Serial transfer baudrate 115200, 8n1 occurred? y/n")
     passert("interactive success", io.read() == "y")
 
     passert_periphery_success("close serial", function () serial:close() end)
