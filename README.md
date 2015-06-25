@@ -87,7 +87,7 @@ local ctrl_mmio = MMIO(0x44E10000, 0x1000)
 local mac_id0_lo = ctrl_mmio:read32(0x630)
 local mac_id0_hi = ctrl_mmio:read32(0x634)
 
-print(string.format("MAC address: %04x %08x", mac_id0_lo, mac_id0_hi))
+print(string.format("MAC address: %04x%08x", mac_id0_lo, mac_id0_hi))
 
 ctrl_mmio:close()
 ```
