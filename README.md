@@ -53,7 +53,7 @@ local I2C = require('periphery').I2C
 -- Open i2c-0 controller
 local i2c = I2C("/dev/i2c-0")
 
---- Read byte at address 0x100 of EEPROM at 0x50
+-- Read byte at address 0x100 of EEPROM at 0x50
 local msgs = { {0x01, 0x00}, {0x00, flags = I2C.I2C_M_RD} }
 i2c:transfer(0x50, msgs)
 print(string.format("0x100: 0x%02x", msgs[2][1]))
@@ -71,7 +71,7 @@ local MMIO = require('periphery').MMIO
 -- Open am335x real-time clock subsystem page
 local rtc_mmio = MMIO(0x44E3E000, 0x1000)
 
---- Read current time
+-- Read current time
 local rtc_secs = rtc_mmio:read32(0x00)
 local rtc_mins = rtc_mmio:read32(0x04)
 local rtc_hrs = rtc_mmio:read32(0x08)
@@ -80,7 +80,7 @@ print(string.format("hours: %02x minutes: %02x seconds: %02x", rtc_hrs, rtc_mins
 
 rtc_mmio:close()
 
---- Open am335x control module page
+-- Open am335x control module page
 local ctrl_mmio = MMIO(0x44E10000, 0x1000)
 
 -- Read MAC address
@@ -118,7 +118,7 @@ serial:close()
 lua-periphery errors are descriptive table objects with an error code string, C errno, and a user message.
 
 ``` lua
---- Example of error caught with pcall()
+-- Example of error caught with pcall()
 > status, err = pcall(function () spi = periphery.SPI("/dev/spidev1.0", 0, 1e6) end)
 > =status
 false
@@ -130,7 +130,7 @@ false
 }
 > 
 
---- Example of error propagated to user
+-- Example of error propagated to user
 > periphery = require('periphery')
 > spi = periphery.SPI('/dev/spidev1.0', 0, 1e6)
 Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
