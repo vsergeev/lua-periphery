@@ -89,8 +89,8 @@ function test_interactive()
 
     passert_periphery_success("open i2c", function () i2c = I2C(device) end)
 
-    print("Starting interactive test. Get out your logic analyzer, buddy!");
-    print("Press enter to continue...");
+    print("Starting interactive test. Get out your logic analyzer, buddy!")
+    print("Press enter to continue...")
     io.read()
 
     -- There isn't much we can do without assuming a device on the other end,
@@ -101,12 +101,12 @@ function test_interactive()
     -- S [ 0x7a W ] [0xaa] [0xbb] [0xcc] [0xdd] NA
     local msgs = { { 0xaa, 0xbb, 0xcc, 0xdd } }
 
-    print("Press enter to start transfer...");
+    print("Press enter to start transfer...")
     io.read()
     passert_periphery_error("transfer to non-existent device", function () i2c:transfer(0x7a, msgs) end, "I2C_ERROR_TRANSFER", 121)
     passert_periphery_success("close i2c", function () i2c:close() end)
 
-    print("I2C transfer occurred? y/n");
+    print("I2C transfer occurred? y/n")
     passert("interactive success", io.read() == "y")
 end
 
