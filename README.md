@@ -76,7 +76,7 @@ local rtc_secs = rtc_mmio:read32(0x00)
 local rtc_mins = rtc_mmio:read32(0x04)
 local rtc_hrs = rtc_mmio:read32(0x08)
 
-print(string.format("hours: %02x minutes: %02x seconds: %02x", rtc_secs, rtc_mins, rtc_hrs))
+print(string.format("hours: %02x minutes: %02x seconds: %02x", rtc_hrs, rtc_mins, rtc_secs))
 
 rtc_mmio:close()
 
