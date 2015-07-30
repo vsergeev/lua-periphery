@@ -150,7 +150,7 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 $ sudo luarocks install lua-periphery
 ```
 
-Cross-compile with `CC=cross-here-gcc luarocks build lua-periphery`. Your target's sysroot must provide the Lua includes.
+Cross-compile with `CC=arm-linux-gnueabihf-gcc luarocks build lua-periphery`. Your target's sysroot must provide the Lua includes.
 
 
 #### Install a pre-built binary rock with LuaRocks
@@ -208,10 +208,10 @@ lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
 #### Cross-compiling from Source
 
-To cross-compile, set the `CC` environment variable with the cross-compiler when calling make: `CC=cross-here-gcc make clean all`. Your target's sysroot must provide the Lua includes.
+To cross-compile, set the `CC` environment variable with the cross-compiler when calling make: `CC=arm-linux-gnueabihf-gcc make clean all`. Your target's sysroot must provide the Lua includes.
 
 ``` console
-$ CC=arm-linux-gcc make clean all
+$ CC=arm-linux-gnueabihf-gcc make clean all
 cd c-periphery && make clean
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
@@ -220,14 +220,14 @@ rm -rf periphery.so
 cd c-periphery; make
 make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
 mkdir obj
-arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
-arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
-arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
-arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
-arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
+arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
+arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
+arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
+arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
+arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
 ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
 make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-arm-linux-gcc -std=c99 -pedantic -D_DEFAULT_SOURCE -Wall -Wextra -Wno-unused-parameter  -fPIC -I. -I/home/anteater/sandbox/buildroot-nmt/output/host/usr/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include   -shared src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so
+arm-linux-gnueabihf-gcc -std=c99 -pedantic -D_XOPEN_SOURCE=700 -Wall -Wextra -Wno-unused-parameter  -fPIC -I. -I/home/anteater/sandbox/buildroot-nmt/output/host/usr/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include   -shared src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so
 $ file periphery.so
 periphery.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
 $
