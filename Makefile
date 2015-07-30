@@ -16,7 +16,7 @@ endif
 
 ###########################################################################
 
-CFLAGS += -std=c99 -pedantic -D_DEFAULT_SOURCE
+CFLAGS += -std=c99 -pedantic -D_XOPEN_SOURCE=700
 CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC -I. $(LUA_CFLAGS)
 LDFLAGS += -shared
 
