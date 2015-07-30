@@ -1,4 +1,4 @@
-# lua-periphery v1.0.5
+# lua-periphery v1.0.6
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 

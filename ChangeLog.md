@@ -1,3 +1,6 @@
+* v1.0.6 - 07/30/2015
+    * Fix `struct timespec`/`nanosleep()` related compilation error on older
+      versions of gcc/glibc.
 * v1.0.5 - 04/08/2015
     * Bump `c-periphery` dependency version for serial-related portability
       fixes.
