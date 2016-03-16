@@ -16,9 +16,9 @@ endif
 
 ###########################################################################
 
-CFLAGS += -std=c99 -pedantic -D_XOPEN_SOURCE=700
-CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC -I. $(LUA_CFLAGS)
-LDFLAGS += -shared
+LIB_CFLAGS += -std=c99 -pedantic -D_XOPEN_SOURCE=700
+LIB_CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC -I. $(LUA_CFLAGS)
+LIB_LDFLAGS += -shared
 
 ###########################################################################
 
@@ -38,7 +38,7 @@ install:
 ###########################################################################
 
 $(LIB): $(C_PERIPHERY_LIB) $(SRCS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) $(C_PERIPHERY_LIB) -o $@
+	$(CC) $(CFLAGS) $(LIB_CFLAGS) $(LDFLAGS) $(LIB_LDFLAGS) $(SRCS) $(C_PERIPHERY_LIB) -o $@
 
 $(C_PERIPHERY_LIB): $(C_PERIPHERY)/Makefile
 	cd $(C_PERIPHERY); $(MAKE)
