@@ -138,6 +138,32 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 > 
 ```
 
+#### Note about Lua 5.1
+
+The Lua 5.1 interpreter will render the string representation of table objects
+thrown by errors in scripts, but not in the interactive console:
+
+``` lua
+> periphery = require('periphery')
+> gpio = periphery.GPIO(14)
+(error object is not a string)
+> 
+```
+
+In the interactive console, these errors must be caught with `pcall()` and
+evaluated explicitly to be rendered:
+
+``` lua
+> periphery = require('periphery')
+> gpio, err = pcall(periphery.GPIO, 14)
+> =err
+Exporting GPIO: opening 'export': Permission denied [errno 13]
+> 
+```
+
+This only applies to Lua 5.1. LuaJIT and Lua 5.2 onwards automatically
+stringify error table objects thrown to the interactive console.
+
 ## Documentation
 
 `man` page style documentation for each interface is available in [docs](docs/) folder.
