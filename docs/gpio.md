@@ -32,17 +32,17 @@ gpio.edge                   mutable <string>
 ### CONSTANTS
 
 * GPIO Direction
-    * "in": Input
-    * "out": Output, initialized to low
-    * "low": Output, initialized to low
-    * "high": Output, initialized to high
-    * "preserve": Preserve existing direction
+    * `"in"` - Input
+    * `"out"` - Output, initialized to low
+    * `"low"` - Output, initialized to low
+    * `"high"` - Output, initialized to high
+    * `"preserve"` - Preserve existing direction
 
 * GPIO Edge
-    * "none": No interrupt edge
-    * "rising": Rising edge (0 -> 1 transition)
-    * "falling": Falling edge (1 -> 0 transition)
-    * "both": Both edges (X -> !X transition)
+    * `"none"` - No interrupt edge
+    * `"rising"` - Rising edge (0 -> 1 transition)
+    * `"falling"` - Falling edge (1 -> 0 transition)
+    * `"both"` - Both edges (X -> !X transition)
 
 ### DESCRIPTION
 
@@ -142,7 +142,7 @@ Raises a [GPIO error](#errors) on assignment.
 ``` lua
 Property gpio.direction     mutable <string>
 ```
-Get or set the GPIO's direction. Can be "in", or "out" (see [constants](#constants) above).
+Get or set the GPIO's direction. Can be "in" or "out" (see [constants](#constants) above).
 
 Raises a [GPIO error](#errors) on assignment with invalid direction.
 
@@ -181,15 +181,15 @@ false
 
 | Error Code                    | Description                   |
 |-------------------------------|-------------------------------|
-| "GPIO_ERROR_ARG"              | Invalid arguments             |
-| "GPIO_ERROR_EXPORT"           | Exporting GPIO                |
-| "GPIO_ERROR_OPEN"             | Opening GPIO value            |
-| "GPIO_ERROR_IO"               | Reading/writing GPIO value    |
-| "GPIO_ERROR_CLOSE"            | Closing GPIO value            |
-| "GPIO_ERROR_SET_DIRECTION"    | Setting GPIO direction        |
-| "GPIO_ERROR_GET_DIRECTION"    | Getting GPIO direction        |
-| "GPIO_ERROR_SET_EDGE"         | Setting GPIO interrupt edge   |
-| "GPIO_ERROR_GET_EDGE"         | Getting GPIO interrupt edge   |
+| `"GPIO_ERROR_ARG"`            | Invalid arguments             |
+| `"GPIO_ERROR_EXPORT"`         | Exporting GPIO                |
+| `"GPIO_ERROR_OPEN"`           | Opening GPIO value            |
+| `"GPIO_ERROR_IO"`             | Reading/writing GPIO value    |
+| `"GPIO_ERROR_CLOSE"`          | Closing GPIO value            |
+| `"GPIO_ERROR_SET_DIRECTION"`  | Setting GPIO direction        |
+| `"GPIO_ERROR_GET_DIRECTION"`  | Getting GPIO direction        |
+| `"GPIO_ERROR_SET_EDGE"`       | Setting GPIO interrupt edge   |
+| `"GPIO_ERROR_GET_EDGE"`       | Getting GPIO interrupt edge   |
 
 ### EXAMPLE
 

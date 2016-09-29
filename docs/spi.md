@@ -31,8 +31,8 @@ spi.extra_flags     mutable <number>
 ### CONSTANTS
 
 * SPI Bit Order
-    * "msb": Most significant bit first transfer (typical)
-    * "lsb": Least significant bit first transfer
+    * `"msb"` - Most significant bit first transfer (typical)
+    * `"lsb"` - Least significant bit first transfer
 
 ### DESCRIPTION
 
@@ -130,14 +130,14 @@ false
 > 
 ```
 
-| Error Code            | Description                   |
-|-----------------------|-------------------------------|
-| "SPI_ERROR_ARG"       | Invalid arguments             |
-| "SPI_ERROR_OPEN"      | Opening SPI device            |
-| "SPI_ERROR_QUERY"     | Querying SPI device settings  |
-| "SPI_ERROR_CONFIGURE" | Configuring SPI device        |
-| "SPI_ERROR_TRANSFER"  | SPI transfer                  |
-| "SPI_ERROR_CLOSE"     | Closing SPI device            |
+| Error Code              | Description                   |
+|-------------------------|-------------------------------|
+| `"SPI_ERROR_ARG"`       | Invalid arguments             |
+| `"SPI_ERROR_OPEN"`      | Opening SPI device            |
+| `"SPI_ERROR_QUERY"`     | Querying SPI device settings  |
+| `"SPI_ERROR_CONFIGURE"` | Configuring SPI device        |
+| `"SPI_ERROR_TRANSFER"`  | SPI transfer                  |
+| `"SPI_ERROR_CLOSE"`     | Closing SPI device            |
 
 ### EXAMPLE
 

@@ -153,11 +153,11 @@ false
 
 | Error Code            | Description                   |
 |-----------------------|-------------------------------|
-| "MMIO_ERROR_ARG"      | Invalid arguments             |
-| "MMIO_ERROR_OPEN"     | Opening /dev/mem              |
-| "MMIO_ERROR_MAP"      | Mapping memory                |
-| "MMIO_ERROR_CLOSE"    | Closing /dev/mem              |
-| "MMIO_ERROR_UNMAP"    | Unmapping memory              |
+| `"MMIO_ERROR_ARG"`    | Invalid arguments             |
+| `"MMIO_ERROR_OPEN"`   | Opening /dev/mem              |
+| `"MMIO_ERROR_MAP"`    | Mapping memory                |
+| `"MMIO_ERROR_CLOSE"`  | Closing /dev/mem              |
+| `"MMIO_ERROR_UNMAP"`  | Unmapping memory              |
 
 ### EXAMPLE
 
