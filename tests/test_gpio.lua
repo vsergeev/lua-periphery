@@ -91,7 +91,32 @@ function test_open_config_close()
     -- Open with table arguments
     passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output, direction="in"} end)
     passert("property pin", gpio.pin == pin_output)
-    passert("direction", gpio.direction == "in")
+    passert("direction is in", gpio.direction == "in")
+    passert_periphery_success("set direction out", function () gpio.direction = "out" end)
+    passert_periphery_success("close gpio", function () gpio:close() end)
+
+    -- Open with preserved direction
+    passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output, "preserve") end)
+    passert("direction is preserved out", gpio.direction == "out")
+    passert_periphery_success("set direction in", function () gpio.direction = "in" end)
+    passert_periphery_success("close gpio", function () gpio:close() end)
+
+    -- Open with preserved direction by table arguments
+    passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output, direction = "preserve"} end)
+    passert("direction is preserved in", gpio.direction == "in")
+    passert_periphery_success("set direction out", function () gpio.direction = "out" end)
+    passert_periphery_success("close gpio", function () gpio:close() end)
+    passert_periphery_success("close gpio", function () gpio:close() end)
+
+    -- Open with default preserved direction
+    passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output) end)
+    passert("direction is preserved out", gpio.direction == "out")
+    passert_periphery_success("set direction in", function () gpio.direction = "in" end)
+    passert_periphery_success("close gpio", function () gpio:close() end)
+
+    -- Open with default preserved direction by table arguments
+    passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output} end)
+    passert("direction is preserved in", gpio.direction == "in")
     passert_periphery_success("close gpio", function () gpio:close() end)
 end
 

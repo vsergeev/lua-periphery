@@ -105,20 +105,27 @@ static int lua_gpio_open(lua_State *L) {
         lua_getfield(L, 2, "pin");
         if (!lua_isnumber(L, -1))
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'pin', should be number");
+        pin = lua_tounsigned(L, -1);
+
         lua_getfield(L, 2, "direction");
-        if (!lua_isstring(L, -1))
+        if (lua_isnil(L, -1))
+            str_direction = "preserve";
+        else if (lua_isstring(L, -1))
+            str_direction = lua_tostring(L, -1);
+        else
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'direction', should be string");
 
-        pin = lua_tounsigned(L, -2);
-        str_direction = lua_tostring(L, -1);
-
-    /* Arguments passed normally */
+    /* Arguments passed on stack */
     } else {
         lua_gpio_checktype(L, 2, LUA_TNUMBER);
-        lua_gpio_checktype(L, 3, LUA_TSTRING);
-
         pin = lua_tounsigned(L, 2);
-        str_direction = lua_tostring(L, 3);
+
+        if (lua_gettop(L) > 2) {
+            lua_gpio_checktype(L, 3, LUA_TSTRING);
+            str_direction = lua_tostring(L, 3);
+        } else {
+            str_direction = "preserve";
+        }
     }
 
     if (strcmp(str_direction, "in") == 0)
@@ -129,8 +136,10 @@ static int lua_gpio_open(lua_State *L) {
         direction = GPIO_DIR_OUT_LOW;
     else if (strcmp(str_direction, "high") == 0)
         direction = GPIO_DIR_OUT_HIGH;
+    else if (strcmp(str_direction, "preserve") == 0)
+        direction = GPIO_DIR_PRESERVE;
     else
-        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid direction, should be 'in', 'out', 'low', 'high'");
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid direction, should be 'in', 'out', 'low', 'high', 'preserve'");
 
     if ((ret = gpio_open(gpio, pin, direction)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
