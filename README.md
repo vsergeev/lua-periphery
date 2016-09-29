@@ -140,7 +140,7 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 
 ## Documentation
 
-`man` page style documentation for each interface wrapper is available in [docs](docs/) folder.
+`man` page style documentation for each interface is available in [docs](docs/) folder.
 
 ## Installation
 
@@ -149,8 +149,6 @@ Opening SPI device "/dev/spidev1.0": Permission denied [errno 13]
 ``` console
 $ sudo luarocks install lua-periphery
 ```
-
-Cross-compile with `CC=arm-linux-gnueabihf-gcc luarocks build lua-periphery`. Your target's sysroot must provide the Lua includes.
 
 #### Build and install from source
 
