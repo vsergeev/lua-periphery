@@ -1,0 +1,17 @@
+language: c
+
+sudo: required
+
+compiler:
+  - clang
+  - gcc
+
+install:
+  - sudo apt-get install lua5.1 liblua5.1-dev lua5.2 liblua5.2-dev
+  # todo: add lua5.3
+
+script:
+    - make clean all LUA=lua5.1
+    - lua5.1 -e "require('periphery')"
+    - make clean all LUA=lua5.2
+    - lua5.2 -e "require('periphery')"
