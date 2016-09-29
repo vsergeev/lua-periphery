@@ -152,45 +152,6 @@ $ sudo luarocks install lua-periphery
 
 Cross-compile with `CC=arm-linux-gnueabihf-gcc luarocks build lua-periphery`. Your target's sysroot must provide the Lua includes.
 
-
-#### Install a pre-built binary rock with LuaRocks
-
-Lua 5.3 / Linux x86_64
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.3.linux-x86_64.rock -O lua-periphery-1.0.5-1.linux-x86_64.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-x86_64.rock
-```
-
-Lua 5.3 / Linux armv7l
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.3.linux-armv7l.rock -O lua-periphery-1.0.5-1.linux-armv7l.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-armv7l.rock
-```
-
-Lua 5.2 / Linux x86_64
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.2.linux-x86_64.rock -O lua-periphery-1.0.5-1.linux-x86_64.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-x86_64.rock
-```
-
-Lua 5.2 / Linux armv7l
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.2.linux-armv7l.rock -O lua-periphery-1.0.5-1.linux-armv7l.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-armv7l.rock
-```
-
-Lua 5.1 / Linux x86_64
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.1.linux-x86_64.rock -O lua-periphery-1.0.5-1.linux-x86_64.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-x86_64.rock
-```
-
-Lua 5.1 / Linux armv7l
-``` console
-$ wget https://github.com/vsergeev/lua-periphery/releases/download/v1.0.5/lua-periphery-1.0.5-1.lua-5.1.linux-armv7l.rock -O lua-periphery-1.0.5-1.linux-armv7l.rock
-$ sudo luarocks install lua-periphery-1.0.5-1.linux-armv7l.rock
-```
-
 #### Build and install from source
 
 Clone lua-periphery recursively to also fetch [c-periphery](https://github.com/vsergeev/c-periphery), which lua-periphery is built on.
