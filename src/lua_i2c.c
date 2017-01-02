@@ -254,6 +254,7 @@ static int lua_i2c_transfer(lua_State *L) {
                 lua_pushunsigned(L, i2c_msgs[i].buf[j]);
                 lua_settable(L, -3);
             }
+            lua_pop(L, 1);
         }
     }
 
