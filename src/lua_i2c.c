@@ -361,7 +361,7 @@ LUALIB_API int luaopen_periphery_i2c(lua_State *L) {
     /* Set it as the metatable for the periphery.I2C metatable */
     lua_setmetatable(L, -2);
 
-    lua_pushstring(L, LUA_PERIPHERY_I2C_VERSION);
+    lua_pushstring(L, LUA_PERIPHERY_VERSION);
     lua_setfield(L, -2, "version");
 
     /* Copy useful message flags from <linux/i2c.h> */

@@ -447,7 +447,7 @@ LUALIB_API int luaopen_periphery_spi(lua_State *L) {
     /* Set it as the metatable for the periphery.SPI metatable */
     lua_setmetatable(L, -2);
 
-    lua_pushstring(L, LUA_PERIPHERY_SPI_VERSION);
+    lua_pushstring(L, LUA_PERIPHERY_VERSION);
     lua_setfield(L, -2, "version");
 
     return 1;

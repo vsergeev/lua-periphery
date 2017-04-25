@@ -414,7 +414,7 @@ LUALIB_API int luaopen_periphery_gpio(lua_State *L) {
     /* Set it as the metatable for the periphery.GPIO metatable */
     lua_setmetatable(L, -2);
 
-    lua_pushstring(L, LUA_PERIPHERY_GPIO_VERSION);
+    lua_pushstring(L, LUA_PERIPHERY_VERSION);
     lua_setfield(L, -2, "version");
 
     return 1;
