@@ -1,3 +1,10 @@
+* v1.1.1 - 04/25/2017
+    * Fix multiple reads in I2C transfer.
+    * Bump c-periphery dependency version to v1.1.1 to fix blocking GPIO poll
+      for some platforms.
+    * Contributors
+        * Wojciech Nizinski, @niziak - 2d39685
+
 * v1.1.0 - 09/29/2016
     * Add support for preserving pin direction to GPIO open.
     * Fix build issues caused by make flags propagating to c-periphery.
