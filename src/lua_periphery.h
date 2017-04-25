@@ -7,7 +7,7 @@
 #ifndef _LUA_PERIPHERY_H
 #define _LUA_PERIPHERY_H
 
-#define LUA_PERIPHERY_VERSION           "1.1.0"
+#define LUA_PERIPHERY_VERSION           "1.1.1"
 
 #endif
 
