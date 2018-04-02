@@ -1,3 +1,7 @@
+* v1.1.2 - 04/01/2018
+    * Bump c-periphery dependency version to v1.1.2 to add handling for delayed
+      pin directory export on some platforms when opening a GPIO.
+
 * v1.1.1 - 04/25/2017
     * Fix multiple reads in I2C transfer.
     * Bump c-periphery dependency version to v1.1.1 to fix blocking GPIO poll
