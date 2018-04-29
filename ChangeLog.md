@@ -1,3 +1,8 @@
+* v1.1.3 - 04/28/2018
+    * Bump c-periphery dependency version to v1.1.3 to fix data's most
+      significant bit getting stripped when opening a serial port with parity
+      enabled.
+
 * v1.1.2 - 04/01/2018
     * Bump c-periphery dependency version to v1.1.2 to add handling for delayed
       pin directory export on some platforms when opening a GPIO.
