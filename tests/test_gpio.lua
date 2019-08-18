@@ -191,15 +191,15 @@ function test_interactive()
 end
 
 if #arg < 2 then
-    io.stderr:write(string.format("Usage: lua %s <pin #1> <pin #2>\n\n", arg[0]))
+    io.stderr:write(string.format("Usage: lua %s <GPIO #1> <GPIO #2>\n\n", arg[0]))
     io.stderr:write("[1/4] Argument test: No requirements.\n")
-    io.stderr:write("[2/4] Open/close test: GPIO pin #2 should be real.\n")
+    io.stderr:write("[2/4] Open/close test: GPIO #2 should be real.\n")
     io.stderr:write("[3/4] Loopback test: GPIOs #1 and #2 should be connected with a wire.\n")
     io.stderr:write("[4/4] Interactive test: GPIO #2 should be observed with a multimeter.\n\n")
-    io.stderr:write("Hint: for BeagleBone Black, connect a wire between\n")
-    io.stderr:write("GPIO 38 (P8.3, gpio1[6]) and GPIO 39 (P8.4, gpio1[7]),\n")
-    io.stderr:write("then run this test with:\n")
-    io.stderr:write(string.format("    lua %s 38 39\n\n", arg[0]))
+    io.stderr:write("Hint: for Raspberry Pi 3,\n")
+    io.stderr:write("Use GPIO 17 (header pin 11) and GPIO 27 (header pin 13),\n")
+    io.stderr:write("connect a loopback between them, and run this test with:\n")
+    io.stderr:write(string.format("    lua %s 17 27\n\n", arg[0]))
     os.exit(1)
 end
 
