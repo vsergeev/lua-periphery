@@ -85,10 +85,12 @@ if #arg < 1 then
     io.stderr:write("[2/4] Open/close test: I2C device should be real.\n")
     io.stderr:write("[3/4] Loopback test: No test.\n")
     io.stderr:write("[4/4] Interactive test: I2C bus should be observed with an oscilloscope or logic analyzer.\n\n")
-    io.stderr:write("Hint: for BeagleBone Black, export I2C1 to /dev/i2c-2 with:\n")
-    io.stderr:write("    echo BB-I2C1A1 > /sys/devices/bone_capemgr.9/slots\n")
-    io.stderr:write("to enable I2C1 (SCL=P9.24, SDA=P9.26), then run this test:\n")
-    io.stderr:write(string.format("    lua %s /dev/i2c-2\n\n", arg[0]))
+    io.stderr:write("Hint: for Raspberry Pi 3, enable I2C1 with:\n")
+    io.stderr:write("   $ echo \"dtparam=i2c_arm=on\" | sudo tee -a /boot/config.txt\n")
+    io.stderr:write("   $ sudo reboot\n")
+    io.stderr:write("Use pins I2C1 SDA (header pin 2) and I2C1 SCL (header pin 3),\n")
+    io.stderr:write("and run this test with:\n")
+    io.stderr:write(string.format("    lua %s /dev/i2c-1\n\n", arg[0]))
     os.exit(1)
 end
 
