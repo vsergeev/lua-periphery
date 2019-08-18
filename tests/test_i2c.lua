@@ -11,7 +11,6 @@ local I2C = periphery.I2C
 --------------------------------------------------------------------------------
 
 local device = nil
-local eeprom_address = nil
 
 --------------------------------------------------------------------------------
 
@@ -49,37 +48,7 @@ function test_loopback()
 
     ptest()
 
-    -- "Loopback" plan:
-    --  1. Read EEPROM via sysfs
-    --  2. Read it ourselves via i2c_*() and compare data
-
-    -- Read EEPROM via sysfs
-    local sysfs_path = string.format("/sys/bus/i2c/devices/%s-00%02x/eeprom", string.sub(device, #device), eeprom_address)
-    local f = io.open(sysfs_path, "rb")
-    passert("open sysfs eeprom file", f ~= nil)
-    local eeprom_data_str = f:read(256)
-    f:close()
-
-    -- Convert EEPROM data string to a bytes table
-    local eeprom_data = {}
-    for i = 1,#eeprom_data_str do
-        eeprom_data[i] = eeprom_data_str:sub(i,i):byte()
-    end
-
-    -- Read it ourselves and compare
-    passert_periphery_success("open i2c", function () i2c = I2C(device) end)
-
-    local buf = ""
-    for addr = 0, 255 do
-        local msgs = { { 0x00, addr }, { 0x00, flags = I2C.I2C_M_RD } }
-        passert_periphery_success("transfer", function () i2c:transfer(eeprom_address, msgs) end)
-        if msgs[2][1] ~= eeprom_data[addr+1] then
-            pfail(string.format("data mismatch at address %d (expected %02x, got %02x)", addr, string.byte(eeprom_data[addr+1]), msgs[2][1]))
-            os.exit(1)
-        end
-    end
-
-    passert_periphery_success("close i2c", function () i2c:close() end)
+    print("No general way to do a loopback test for I2C without a real component, skipping...")
 end
 
 function test_interactive()
@@ -110,21 +79,20 @@ function test_interactive()
     passert("interactive success", io.read() == "y")
 end
 
-if #arg < 3 then
-    io.stderr:write(string.format("Usage: lua %s <I2C device #1> <EEPROM address> <I2C device #2>\n\n", arg[0]))
+if #arg < 1 then
+    io.stderr:write(string.format("Usage: lua %s <I2C device>\n\n", arg[0]))
     io.stderr:write("[1/4] Arguments test: No requirements.\n")
-    io.stderr:write("[2/4] Open/close test: I2C device #1 should be real.\n")
-    io.stderr:write("[3/4] Loopback test: I2C device #1 should have an EEPROM attached.\n")
-    io.stderr:write("[4/4] Interactive test: I2C device #2 should be observed with a logic analyzer.\n\n")
-    io.stderr:write("Hint: for BeagleBone Black, use onboard EEPROM on /dev/i2c-0, and export I2C1 to /dev/i2c-2 with:\n")
+    io.stderr:write("[2/4] Open/close test: I2C device should be real.\n")
+    io.stderr:write("[3/4] Loopback test: No test.\n")
+    io.stderr:write("[4/4] Interactive test: I2C bus should be observed with an oscilloscope or logic analyzer.\n\n")
+    io.stderr:write("Hint: for BeagleBone Black, export I2C1 to /dev/i2c-2 with:\n")
     io.stderr:write("    echo BB-I2C1A1 > /sys/devices/bone_capemgr.9/slots\n")
     io.stderr:write("to enable I2C1 (SCL=P9.24, SDA=P9.26), then run this test:\n")
-    io.stderr:write(string.format("    lua %s /dev/i2c-0 0x50 /dev/i2c-2\n\n", arg[0]))
+    io.stderr:write(string.format("    lua %s /dev/i2c-2\n\n", arg[0]))
     os.exit(1)
 end
 
 device = arg[1]
-eeprom_address = tonumber(arg[2])
 
 test_arguments()
 pokay("Arguments test passed.")
@@ -132,7 +100,6 @@ test_open_config_close()
 pokay("Open/close test passed.")
 test_loopback()
 pokay("Loopback test passed.")
-device = arg[3]
 test_interactive()
 pokay("Interactive test passed.")
 
