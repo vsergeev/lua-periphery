@@ -179,14 +179,14 @@ false
 > 
 ```
 
-| Error Code                 | Description                       |
-|----------------------------|-----------------------------------|
-| `"SERIAL_ERROR_ARG"`       | Invalid arguments                 |
-| `"SERIAL_ERROR_OPEN"`      | Opening serial port               |
-| `"SERIAL_ERROR_QUERY"`     | Getting serial port attributes    |
-| `"SERIAL_ERROR_IO"`        | Reading/writing serial port       |
-| `"SERIAL_ERROR_CONFIGURE"` | Setting serial port attributes    |
-| `"SERIAL_ERROR_CLOSE"`     | Closing serial port               |
+| Error Code                    | Description                           |
+|-------------------------------|---------------------------------------|
+| `"SERIAL_ERROR_ARG"`          | Invalid arguments                     |
+| `"SERIAL_ERROR_OPEN"`         | Opening serial port                   |
+| `"SERIAL_ERROR_QUERY"`        | Querying serial port attributes       |
+| `"SERIAL_ERROR_CONFIGURE"`    | Configuring serial port attributes    |
+| `"SERIAL_ERROR_IO"`           | Reading/writing serial port           |
+| `"SERIAL_ERROR_CLOSE"`        | Closing serial port                   |
 
 ### EXAMPLE
 

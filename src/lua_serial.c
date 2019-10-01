@@ -55,8 +55,8 @@ static const char *serial_error_code_strings[] = {
     [-SERIAL_ERROR_ARG]         = "SERIAL_ERROR_ARG",
     [-SERIAL_ERROR_OPEN]        = "SERIAL_ERROR_OPEN",
     [-SERIAL_ERROR_QUERY]       = "SERIAL_ERROR_QUERY",
-    [-SERIAL_ERROR_IO]          = "SERIAL_ERROR_IO",
     [-SERIAL_ERROR_CONFIGURE]   = "SERIAL_ERROR_CONFIGURE",
+    [-SERIAL_ERROR_IO]          = "SERIAL_ERROR_IO",
     [-SERIAL_ERROR_CLOSE]       = "SERIAL_ERROR_CLOSE",
     [-SERIAL_ERROR_ALLOC]       = "SERIAL_ERROR_ALLOC",
 };
