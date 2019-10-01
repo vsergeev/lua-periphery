@@ -52,7 +52,7 @@ I2C.I2C_M_RECV_LEN
 static const char *i2c_error_code_strings[] = {
     [-I2C_ERROR_ARG]            = "I2C_ERROR_ARG",
     [-I2C_ERROR_OPEN]           = "I2C_ERROR_OPEN",
-    [-I2C_ERROR_QUERY_SUPPORT]  = "I2C_ERROR_QUERY_SUPPORT",
+    [-I2C_ERROR_QUERY]          = "I2C_ERROR_QUERY",
     [-I2C_ERROR_NOT_SUPPORTED]  = "I2C_ERROR_NOT_SUPPORTED",
     [-I2C_ERROR_TRANSFER]       = "I2C_ERROR_TRANSFER",
     [-I2C_ERROR_CLOSE]          = "I2C_ERROR_CLOSE",
