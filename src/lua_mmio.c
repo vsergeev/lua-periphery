@@ -45,14 +45,12 @@ mmio.size       immutable <number>
 */
 
 /* Define a new error for malloc() required in read/write */
-#define MMIO_ERROR_ALLOC    (MMIO_ERROR_UNMAP-1)
+#define MMIO_ERROR_ALLOC    (MMIO_ERROR_CLOSE-1)
 
 static const char *mmio_error_code_strings[] = {
     [-MMIO_ERROR_ARG]   = "MMIO_ERROR_ARG",
     [-MMIO_ERROR_OPEN]  = "MMIO_ERROR_OPEN",
-    [-MMIO_ERROR_MAP]   = "MMIO_ERROR_MAP",
     [-MMIO_ERROR_CLOSE] = "MMIO_ERROR_CLOSE",
-    [-MMIO_ERROR_UNMAP] = "MMIO_ERROR_UNMAP",
     [-MMIO_ERROR_ALLOC] = "MMIO_ERROR_ALLOC",
 };
 
