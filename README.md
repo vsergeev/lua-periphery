@@ -146,7 +146,7 @@ message:
 
 ``` lua
 > periphery = require('periphery')
-> gpio = periphery.GPIO(14)
+> gpio = periphery.GPIO(14, 'in')
 (error object is not a string)
 > 
 ```
@@ -157,13 +157,13 @@ interactive console:
 
 ``` lua
 > periphery = require('periphery')
-> gpio, err = pcall(periphery.GPIO, 14)
+> gpio, err = pcall(periphery.GPIO, 14, 'in')
 > =tostring(err)
-Exporting GPIO: opening 'export': Permission denied [errno 13]
+Opening GPIO: opening 'export': Permission denied [errno 13]
 > print(err)
-Exporting GPIO: opening 'export': Permission denied [errno 13]
+Opening GPIO: opening 'export': Permission denied [errno 13]
 > =err
-Exporting GPIO: opening 'export': Permission denied [errno 13]
+Opening GPIO: opening 'export': Permission denied [errno 13]
 > 
 ```
 

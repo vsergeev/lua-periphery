@@ -43,15 +43,15 @@ gpio.edge                   mutable <string>
 */
 
 static const char *gpio_error_code_strings[] = {
-    [-GPIO_ERROR_ARG]           = "GPIO_ERROR_ARG",
-    [-GPIO_ERROR_EXPORT]        = "GPIO_ERROR_EXPORT",
-    [-GPIO_ERROR_OPEN]          = "GPIO_ERROR_OPEN",
-    [-GPIO_ERROR_IO]            = "GPIO_ERROR_IO",
-    [-GPIO_ERROR_CLOSE]         = "GPIO_ERROR_CLOSE",
-    [-GPIO_ERROR_SET_DIRECTION] = "GPIO_ERROR_SET_DIRECTION",
-    [-GPIO_ERROR_GET_DIRECTION] = "GPIO_ERROR_GET_DIRECTION",
-    [-GPIO_ERROR_SET_EDGE]      = "GPIO_ERROR_SET_EDGE",
-    [-GPIO_ERROR_GET_EDGE]      = "GPIO_ERROR_GET_EDGE",
+    [-GPIO_ERROR_ARG]               = "GPIO_ERROR_ARG",
+    [-GPIO_ERROR_OPEN]              = "GPIO_ERROR_OPEN",
+    [-GPIO_ERROR_NOT_FOUND]         = "GPIO_ERROR_NOT_FOUND",
+    [-GPIO_ERROR_QUERY]             = "GPIO_ERROR_QUERY",
+    [-GPIO_ERROR_CONFIGURE]         = "GPIO_ERROR_CONFIGURE",
+    [-GPIO_ERROR_UNSUPPORTED]       = "GPIO_ERROR_UNSUPPORTED",
+    [-GPIO_ERROR_INVALID_OPERATION] = "GPIO_ERROR_INVALID_OPERATION",
+    [-GPIO_ERROR_IO]                = "GPIO_ERROR_IO",
+    [-GPIO_ERROR_CLOSE]             = "GPIO_ERROR_CLOSE",
 };
 
 static int lua_gpio_error(lua_State *L, enum gpio_error_code code, int c_errno, const char *fmt, ...) {

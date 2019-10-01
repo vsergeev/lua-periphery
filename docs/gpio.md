@@ -163,7 +163,7 @@ The periphery GPIO methods and properties may raise a Lua error on failure that 
 --- Example of error propagated to user
 > periphery = require('periphery')
 > gpio = periphery.GPIO(23, "in")
-Exporting GPIO: opening 'export': Permission denied [errno 13]
+Opening GPIO: opening 'export': Permission denied [errno 13]
 > 
 
 --- Example of error caught with pcall()
@@ -173,23 +173,23 @@ false
 > dump(err)
 {
   c_errno = 13,
-  message = "Exporting GPIO: opening 'export': Permission denied [errno 13]",
-  code = "GPIO_ERROR_EXPORT"
+  message = "Opening GPIO: opening 'export': Permission denied [errno 13]",
+  code = "GPIO_ERROR_OPEN"
 }
 > 
 ```
 
-| Error Code                    | Description                   |
-|-------------------------------|-------------------------------|
-| `"GPIO_ERROR_ARG"`            | Invalid arguments             |
-| `"GPIO_ERROR_EXPORT"`         | Exporting GPIO                |
-| `"GPIO_ERROR_OPEN"`           | Opening GPIO value            |
-| `"GPIO_ERROR_IO"`             | Reading/writing GPIO value    |
-| `"GPIO_ERROR_CLOSE"`          | Closing GPIO value            |
-| `"GPIO_ERROR_SET_DIRECTION"`  | Setting GPIO direction        |
-| `"GPIO_ERROR_GET_DIRECTION"`  | Getting GPIO direction        |
-| `"GPIO_ERROR_SET_EDGE"`       | Setting GPIO interrupt edge   |
-| `"GPIO_ERROR_GET_EDGE"`       | Getting GPIO interrupt edge   |
+| Error Code                        | Description                           |
+|-----------------------------------|---------------------------------------|
+| `"GPIO_ERROR_ARG"`                | Invalid arguments                     |
+| `"GPIO_ERROR_OPEN"`               | Opening GPIO                          |
+| `"GPIO_ERROR_NOT_FOUND"`          | Line name not found                   |
+| `"GPIO_ERROR_QUERY"`              | Querying GPIO attributes              |
+| `"GPIO_ERROR_CONFIGURE"`          | Configuring GPIO attributes           |
+| `"GPIO_ERROR_UNSUPPORTED"`        | Unsupported attribute or operation    |
+| `"GPIO_ERROR_INVALID_OPERATION"`  | Invalid operation                     |
+| `"GPIO_ERROR_IO"`                 | Reading/writing GPIO                  |
+| `"GPIO_ERROR_CLOSE"`              | Closing GPIO                          |
 
 ### EXAMPLE
 

@@ -37,7 +37,7 @@ function test_open_config_close()
     passert("module version", GPIO.version ~= nil)
 
     -- Open non-existent GPIO (export should fail with EINVAL)
-    passert_periphery_error("non-existent GPIO", function () gpio = GPIO(9999, "in") end, "GPIO_ERROR_EXPORT", 22)
+    passert_periphery_error("non-existent GPIO", function () gpio = GPIO(9999, "in") end, "GPIO_ERROR_OPEN", 22)
 
     -- Open legitimate GPIO
     passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output, "in") end)
