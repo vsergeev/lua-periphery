@@ -97,11 +97,7 @@ static int lua_spi_open(lua_State *L) {
     uint8_t extra_flags;
     int ret;
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
-
-    /* Initialize file descriptor to an invalid value, in case an error occurs
-     * below and gc later close()'s this object. */
-    spi->fd = -1;
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
 
     /* Default settings of optional arguments */
     bit_order = MSB_FIRST;
@@ -175,7 +171,8 @@ static int lua_spi_new(lua_State *L) {
     lua_remove(L, 1);
 
     /* Create handle userdata */
-    lua_newuserdata(L, sizeof(spi_t));
+    spi_t **spi = lua_newuserdata(L, sizeof(spi_t *));
+    *spi = spi_new();
     /* Set SPI metatable on it */
     luaL_getmetatable(L, "periphery.SPI");
     lua_setmetatable(L, -2);
@@ -197,7 +194,7 @@ static int lua_spi_transfer(lua_State *L) {
     unsigned int i, len;
     int ret;
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
     lua_spi_checktype(L, 2, LUA_TTABLE);
 
     len = luaL_len(L, 2);
@@ -239,10 +236,22 @@ static int lua_spi_close(lua_State *L) {
     spi_t *spi;
     int ret;
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
 
     if ((ret = spi_close(spi)) < 0)
         return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+
+    return 0;
+}
+
+static int lua_spi_gc(lua_State *L) {
+    spi_t *spi;
+
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
+
+    spi_close(spi);
+
+    spi_free(spi);
 
     return 0;
 }
@@ -251,7 +260,7 @@ static int lua_spi_tostring(lua_State *L) {
     spi_t *spi;
     char spi_str[128];
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
 
     spi_tostring(spi, spi_str, sizeof(spi_str));
 
@@ -275,7 +284,7 @@ static int lua_spi_index(lua_State *L) {
     if (!lua_isnil(L, -1))
         return 1;
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
 
     if (strcmp(field, "fd") == 0) {
         lua_pushinteger(L, spi_fd(spi));
@@ -338,7 +347,7 @@ static int lua_spi_newindex(lua_State *L) {
     spi_t *spi;
     const char *field;
 
-    spi = luaL_checkudata(L, 1, "periphery.SPI");
+    spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
 
     if (!lua_isstring(L, 2))
         return lua_spi_error(L, SPI_ERROR_ARG, 0, "Error: unknown property");
@@ -418,7 +427,7 @@ static int lua_spi_newindex(lua_State *L) {
 static const struct luaL_Reg periphery_spi_m[] = {
     {"close", lua_spi_close},
     {"transfer", lua_spi_transfer},
-    {"__gc", lua_spi_close},
+    {"__gc", lua_spi_gc},
     {"__tostring", lua_spi_tostring},
     {"__index", lua_spi_index},
     {"__newindex", lua_spi_newindex},
