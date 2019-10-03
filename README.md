@@ -193,32 +193,34 @@ $ make clean all
 $ cp periphery.so /path/to/lua/libs/
 ```
 
-Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.2/`, the same directory as other Lua sources, etc.
+Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.3/`, the same directory as other Lua sources, etc.
 
 lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
 #### Cross-compiling from Source
 
-To cross-compile, set the `CC` environment variable with the cross-compiler when calling make: `CC=arm-linux-gnueabihf-gcc make clean all`. Your target's sysroot must provide the Lua includes.
+Set the `CROSS_COMPILE` environment variable with the cross-compiler prefix when calling make. Your target's sysroot must provide the Lua includes.
 
 ``` console
-$ CC=arm-linux-gnueabihf-gcc make clean all
+$ CROSS=arm-linux- make clean all
 cd c-periphery && make clean
-make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_mmio tests/test_spi tests/test_gpio
-make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
+make[1]: Entering directory '/home/anteater/projects/software/lua-periphery/c-periphery'
+rm -rf periphery.a obj tests/test_serial tests/test_i2c tests/test_gpio_sysfs tests/test_mmio tests/test_spi tests/test_gpio
+make[1]: Leaving directory '/home/anteater/projects/software/lua-periphery/c-periphery'
 rm -rf periphery.so
 cd c-periphery; make
-make[1]: Entering directory '/home/anteater/projects-software/lua-periphery/c-periphery'
+make[1]: Entering directory '/home/anteater/projects/software/lua-periphery/c-periphery'
 mkdir obj
-arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/gpio.c -o obj/gpio.o
-arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/spi.c -o obj/spi.o
-arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/i2c.c -o obj/i2c.o
-arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/mmio.c -o obj/mmio.o
-arm-linux-gnueabihf-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-pointer-to-int-cast  -fPIC  -c src/serial.c -o obj/serial.o
-ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o
-make[1]: Leaving directory '/home/anteater/projects-software/lua-periphery/c-periphery'
-arm-linux-gnueabihf-gcc -std=c99 -pedantic -D_XOPEN_SOURCE=700 -Wall -Wextra -Wno-unused-parameter  -fPIC -I. -I/home/anteater/sandbox/buildroot-nmt/output/host/usr/arm-buildroot-linux-uclibcgnueabihf/sysroot/usr/include   -shared src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/gpio.c -o obj/gpio.o
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/spi.c -o obj/spi.o
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/i2c.c -o obj/i2c.o
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/mmio.c -o obj/mmio.o
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/serial.c -o obj/serial.o
+arm-linux-gcc -std=gnu99 -pedantic -Wall -Wextra -Wno-unused-parameter  -fPIC -DPERIPHERY_VERSION_COMMIT=\"v2.0.1\"  -c src/version.c -o obj/version.o
+arm-linux-ar rcs periphery.a obj/gpio.o obj/spi.o obj/i2c.o obj/mmio.o obj/serial.o obj/version.o
+make[1]: Leaving directory '/home/anteater/projects/software/lua-periphery/c-periphery'
+arm-linux-gcc  -std=c99 -pedantic -D_XOPEN_SOURCE=700 -Wall -Wextra -Wno-unused-parameter  -fPIC -I.  -Iinc  -shared src/lua_periphery.c src/lua_mmio.c src/lua_
+gpio.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c c-periphery/periphery.a -o periphery.so
 $ file periphery.so
 periphery.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
 $

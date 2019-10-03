@@ -23,6 +23,10 @@ MOD_CFLAGS += -Wall -Wextra -Wno-unused-parameter $(DEBUG) -fPIC -I. $(LUA_CFLAG
 MOD_LDFLAGS = $(LDFLAGS)
 MOD_LDFLAGS += -shared
 
+ifdef CROSS_COMPILE
+CC = $(CROSS_COMPILE)gcc
+endif
+
 ###########################################################################
 
 .PHONY: all
