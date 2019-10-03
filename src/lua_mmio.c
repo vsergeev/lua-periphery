@@ -93,11 +93,7 @@ static int lua_mmio_open(lua_State *L) {
     size_t size;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
-
-    /* Initialize MMIO pointer to an invalid value, in case an error occurs
-     * below and gc later close()'s this object. */
-    mmio->ptr = NULL;
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
 
     /* Arguments passed in table form */
     if (lua_istable(L, 2)) {
@@ -131,7 +127,8 @@ static int lua_mmio_new(lua_State *L) {
     lua_remove(L, 1);
 
     /* Create handle userdata */
-    lua_newuserdata(L, sizeof(mmio_t));
+    mmio_t **mmio = lua_newuserdata(L, sizeof(mmio_t *));
+    *mmio = mmio_new();
     /* Set MMIO metatable on it */
     luaL_getmetatable(L, "periphery.MMIO");
     lua_setmetatable(L, -2);
@@ -153,7 +150,7 @@ static int lua_mmio_read32(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
 
     offset = lua_tounsigned(L, 2);
@@ -172,7 +169,7 @@ static int lua_mmio_read16(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
 
     offset = lua_tounsigned(L, 2);
@@ -191,7 +188,7 @@ static int lua_mmio_read8(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
 
     offset = lua_tounsigned(L, 2);
@@ -210,7 +207,7 @@ static int lua_mmio_write32(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
     lua_mmio_checktype(L, 3, LUA_TNUMBER);
 
@@ -229,7 +226,7 @@ static int lua_mmio_write16(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
     lua_mmio_checktype(L, 3, LUA_TNUMBER);
 
@@ -251,7 +248,7 @@ static int lua_mmio_write8(lua_State *L) {
     uintptr_t offset;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
     lua_mmio_checktype(L, 3, LUA_TNUMBER);
 
@@ -274,7 +271,7 @@ static int lua_mmio_read(lua_State *L) {
     unsigned int i, len;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
     lua_mmio_checktype(L, 3, LUA_TNUMBER);
 
@@ -309,7 +306,7 @@ static int lua_mmio_write(lua_State *L) {
     unsigned int i, len;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
     lua_mmio_checktype(L, 2, LUA_TNUMBER);
     lua_mmio_checktype(L, 3, LUA_TTABLE);
 
@@ -346,10 +343,22 @@ static int lua_mmio_close(lua_State *L) {
     mmio_t *mmio;
     int ret;
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
 
     if ((ret = mmio_close(mmio)) < 0)
         return lua_mmio_error(L, ret, mmio_errno(mmio), "Error: %s", mmio_errmsg(mmio));
+
+    return 0;
+}
+
+static int lua_mmio_gc(lua_State *L) {
+    mmio_t *mmio;
+
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
+
+    mmio_close(mmio);
+
+    mmio_free(mmio);
 
     return 0;
 }
@@ -358,7 +367,7 @@ static int lua_mmio_tostring(lua_State *L) {
     mmio_t *mmio;
     char mmio_str[128];
 
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
 
     mmio_tostring(mmio, mmio_str, sizeof(mmio_str));
 
@@ -383,7 +392,7 @@ static int lua_mmio_index(lua_State *L) {
         return 1;
 
     /* Otherwise, it's a property access */
-    mmio = luaL_checkudata(L, 1, "periphery.MMIO");
+    mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
 
     if (strcmp(field, "base") == 0) {
         lua_pushnumber(L, mmio_base(mmio));
@@ -422,7 +431,7 @@ static const struct luaL_Reg periphery_mmio_m[] = {
     {"write16", lua_mmio_write16},
     {"write8", lua_mmio_write8},
     {"write", lua_mmio_write},
-    {"__gc", lua_mmio_close},
+    {"__gc", lua_mmio_gc},
     {"__tostring", lua_mmio_tostring},
     {"__index", lua_mmio_index},
     {"__newindex", lua_mmio_newindex},
