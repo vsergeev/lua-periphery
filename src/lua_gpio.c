@@ -94,11 +94,7 @@ static int lua_gpio_open(lua_State *L) {
     const char *str_direction;
     int ret;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
-
-    /* Initialize file descriptor to an invalid value, in case an error occurs
-     * below and gc later close()'s this object. */
-    gpio->fd = -1;
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     /* Arguments passed in table form */
     if (lua_istable(L, 2)) {
@@ -152,7 +148,8 @@ static int lua_gpio_new(lua_State *L) {
     lua_remove(L, 1);
 
     /* Create handle userdata */
-    lua_newuserdata(L, sizeof(gpio_t));
+    gpio_t **gpio = lua_newuserdata(L, sizeof(gpio_t *));
+    *gpio = gpio_new();
     /* Set GPIO metatable on it */
     luaL_getmetatable(L, "periphery.GPIO");
     lua_setmetatable(L, -2);
@@ -173,7 +170,7 @@ static int lua_gpio_read(lua_State *L) {
     bool value;
     int ret;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     if ((ret = gpio_read(gpio, &value)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
@@ -188,7 +185,7 @@ static int lua_gpio_write(lua_State *L) {
     bool value;
     int ret;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
     if (lua_isnumber(L, 2))
         value = (lua_tointeger(L, 2)) ? true : false;
     else if (lua_isboolean(L, 2))
@@ -207,7 +204,7 @@ static int lua_gpio_poll(lua_State *L) {
     int timeout_ms;
     int ret;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
     lua_gpio_checktype(L, 2, LUA_TNUMBER);
 
     timeout_ms = lua_tointeger(L, 2);
@@ -224,12 +221,22 @@ static int lua_gpio_close(lua_State *L) {
     gpio_t *gpio;
     int ret;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     if ((ret = gpio_close(gpio)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
 
-    gpio->fd = -1;
+    return 0;
+}
+
+static int lua_gpio_gc(lua_State *L) {
+    gpio_t *gpio;
+
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
+
+    gpio_close(gpio);
+
+    gpio_free(gpio);
 
     return 0;
 }
@@ -238,7 +245,7 @@ static int lua_gpio_tostring(lua_State *L) {
     gpio_t *gpio;
     char gpio_str[128];
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     gpio_tostring(gpio, gpio_str, sizeof(gpio_str));
 
@@ -262,7 +269,7 @@ static int lua_gpio_index(lua_State *L) {
     if (!lua_isnil(L, -1))
         return 1;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     if (strcmp(field, "fd") == 0) {
         lua_pushinteger(L, gpio_fd(gpio));
@@ -316,7 +323,7 @@ static int lua_gpio_newindex(lua_State *L) {
     gpio_t *gpio;
     const char *field;
 
-    gpio = luaL_checkudata(L, 1, "periphery.GPIO");
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     if (!lua_isstring(L, 2))
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: unknown property");
@@ -385,7 +392,7 @@ static const struct luaL_Reg periphery_gpio_m[] = {
     {"read", lua_gpio_read},
     {"write", lua_gpio_write},
     {"poll", lua_gpio_poll},
-    {"__gc", lua_gpio_close},
+    {"__gc", lua_gpio_gc},
     {"__tostring", lua_gpio_tostring},
     {"__index", lua_gpio_index},
     {"__newindex", lua_gpio_newindex},
