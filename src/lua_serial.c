@@ -105,11 +105,7 @@ static int lua_serial_open(lua_State *L) {
     bool rtscts;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
-
-    /* Initialize file descriptor to an invalid value, in case an error occurs
-     * below and gc later close()'s this object. */
-    serial->fd = -1;
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     /* Default settings of optional arguments */
     databits = 8;
@@ -193,7 +189,8 @@ static int lua_serial_new(lua_State *L) {
     lua_remove(L, 1);
 
     /* Create handle userdata */
-    lua_newuserdata(L, sizeof(serial_t));
+    serial_t **serial = lua_newuserdata(L, sizeof(serial_t *));
+    *serial = serial_new();
     /* Set SERIAL metatable on it */
     luaL_getmetatable(L, "periphery.Serial");
     lua_setmetatable(L, -2);
@@ -216,7 +213,7 @@ static int lua_serial_read(lua_State *L) {
     int timeout_ms;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     /* Default timeout */
     timeout_ms = -1;
@@ -274,7 +271,7 @@ static int lua_serial_write(lua_State *L) {
     size_t len;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
     lua_serial_checktype(L, 2, LUA_TSTRING);
 
     buf = (const uint8_t *)lua_tolstring(L, 2, &len);
@@ -290,7 +287,7 @@ static int lua_serial_flush(lua_State *L) {
     serial_t *serial;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if ((ret = serial_flush(serial)) < 0)
         return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
@@ -303,7 +300,7 @@ static int lua_serial_input_waiting(lua_State *L) {
     unsigned int count;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if ((ret = serial_input_waiting(serial, &count)) < 0)
         return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
@@ -317,7 +314,7 @@ static int lua_serial_output_waiting(lua_State *L) {
     unsigned int count;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if ((ret = serial_output_waiting(serial, &count)) < 0)
         return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
@@ -332,7 +329,7 @@ static int lua_serial_poll(lua_State *L) {
     int timeout_ms;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     lua_serial_checktype(L, 2, LUA_TNUMBER);
 
@@ -350,10 +347,22 @@ static int lua_serial_close(lua_State *L) {
     serial_t *serial;
     int ret;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if ((ret = serial_close(serial)) < 0)
         return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
+
+    return 0;
+}
+
+static int lua_serial_gc(lua_State *L) {
+    serial_t *serial;
+
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
+
+    serial_close(serial);
+
+    serial_free(serial);
 
     return 0;
 }
@@ -362,7 +371,7 @@ static int lua_serial_tostring(lua_State *L) {
     serial_t *serial;
     char serial_str[128];
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     serial_tostring(serial, serial_str, sizeof(serial_str));
 
@@ -386,7 +395,7 @@ static int lua_serial_index(lua_State *L) {
     if (!lua_isnil(L, -1))
         return 1;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if (strcmp(field, "fd") == 0) {
         lua_pushinteger(L, serial_fd(serial));
@@ -459,7 +468,7 @@ static int lua_serial_newindex(lua_State *L) {
     serial_t *serial;
     const char *field;
 
-    serial = luaL_checkudata(L, 1, "periphery.Serial");
+    serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
     if (!lua_isstring(L, 2))
         return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: unknown property");
@@ -557,7 +566,7 @@ static const struct luaL_Reg periphery_serial_m[] = {
     {"input_waiting", lua_serial_input_waiting},
     {"output_waiting", lua_serial_output_waiting},
     {"poll", lua_serial_poll},
-    {"__gc", lua_serial_close},
+    {"__gc", lua_serial_gc},
     {"__tostring", lua_serial_tostring},
     {"__index", lua_serial_index},
     {"__newindex", lua_serial_newindex},
