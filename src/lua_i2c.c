@@ -97,11 +97,7 @@ static int lua_i2c_open(lua_State *L) {
     const char *device;
     int ret;
 
-    i2c = luaL_checkudata(L, 1, "periphery.I2C");
-
-    /* Initialize file descriptor to an invalid value, in case an error occurs
-     * below and gc later close()'s this object. */
-    i2c->fd = -1;
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
 
     /* Arguments passed in table form */
     if (lua_istable(L, 2)) {
@@ -129,7 +125,8 @@ static int lua_i2c_new(lua_State *L) {
     lua_remove(L, 1);
 
     /* Create handle userdata */
-    lua_newuserdata(L, sizeof(i2c_t));
+    i2c_t **i2c = lua_newuserdata(L, sizeof(i2c_t *));
+    *i2c = i2c_new();
     /* Set I2C metatable on it */
     luaL_getmetatable(L, "periphery.I2C");
     lua_setmetatable(L, -2);
@@ -163,7 +160,7 @@ static int lua_i2c_transfer(lua_State *L) {
     unsigned int i, j;
     int ret;
 
-    i2c = luaL_checkudata(L, 1, "periphery.I2C");
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
     lua_i2c_checktype(L, 2, LUA_TNUMBER);
     lua_i2c_checktype(L, 3, LUA_TTABLE);
 
@@ -269,10 +266,22 @@ static int lua_i2c_close(lua_State *L) {
     i2c_t *i2c;
     int ret;
 
-    i2c = luaL_checkudata(L, 1, "periphery.I2C");
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
 
     if ((ret = i2c_close(i2c)) < 0)
         return lua_i2c_error(L, ret, i2c_errno(i2c), "Error: %s", i2c_errmsg(i2c));
+
+    return 0;
+}
+
+static int lua_i2c_gc(lua_State *L) {
+    i2c_t *i2c;
+
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
+
+    i2c_close(i2c);
+
+    i2c_free(i2c);
 
     return 0;
 }
@@ -281,7 +290,7 @@ static int lua_i2c_tostring(lua_State *L) {
     i2c_t *i2c;
     char i2c_str[128];
 
-    i2c = luaL_checkudata(L, 1, "periphery.I2C");
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
 
     i2c_tostring(i2c, i2c_str, sizeof(i2c_str));
 
@@ -305,7 +314,7 @@ static int lua_i2c_index(lua_State *L) {
     if (!lua_isnil(L, -1))
         return 1;
 
-    i2c = luaL_checkudata(L, 1, "periphery.I2C");
+    i2c = *((i2c_t **)luaL_checkudata(L, 1, "periphery.I2C"));
 
     if (strcmp(field, "fd") == 0) {
         lua_pushinteger(L, i2c_fd(i2c));
@@ -332,7 +341,7 @@ static int lua_i2c_newindex(lua_State *L) {
 static const struct luaL_Reg periphery_i2c_m[] = {
     {"close", lua_i2c_close},
     {"transfer", lua_i2c_transfer},
-    {"__gc", lua_i2c_close},
+    {"__gc", lua_i2c_gc},
     {"__tostring", lua_i2c_tostring},
     {"__index", lua_i2c_index},
     {"__newindex", lua_i2c_newindex},
