@@ -34,7 +34,6 @@ gpio:close()
 -- Properties
 gpio.fd                     immutable <number>
 gpio.pin                    immutable <number>
-gpio.supports_interrupts    immutable <boolean>
 gpio.direction              mutable <string>
 gpio.edge                   mutable <string>
 */
@@ -101,24 +100,17 @@ static int lua_gpio_open(lua_State *L) {
         pin = lua_tounsigned(L, -1);
 
         lua_getfield(L, 2, "direction");
-        if (lua_isnil(L, -1))
-            str_direction = "preserve";
-        else if (lua_isstring(L, -1))
-            str_direction = lua_tostring(L, -1);
-        else
+        if (lua_isstring(L, -1))
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'direction', should be string");
+        str_direction = lua_tostring(L, -1);
 
     /* Arguments passed on stack */
     } else {
         lua_gpio_checktype(L, 2, LUA_TNUMBER);
         pin = lua_tounsigned(L, 2);
 
-        if (lua_gettop(L) > 2) {
-            lua_gpio_checktype(L, 3, LUA_TSTRING);
-            str_direction = lua_tostring(L, 3);
-        } else {
-            str_direction = "preserve";
-        }
+        lua_gpio_checktype(L, 3, LUA_TSTRING);
+        str_direction = lua_tostring(L, 3);
     }
 
     if (strcmp(str_direction, "in") == 0)
@@ -129,12 +121,10 @@ static int lua_gpio_open(lua_State *L) {
         direction = GPIO_DIR_OUT_LOW;
     else if (strcmp(str_direction, "high") == 0)
         direction = GPIO_DIR_OUT_HIGH;
-    else if (strcmp(str_direction, "preserve") == 0)
-        direction = GPIO_DIR_PRESERVE;
     else
-        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid direction, should be 'in', 'out', 'low', 'high', 'preserve'");
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid direction, should be 'in', 'out', 'low', 'high'");
 
-    if ((ret = gpio_open(gpio, pin, direction)) < 0)
+    if ((ret = gpio_open_sysfs(gpio, pin, direction)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
 
     return 0;
@@ -272,16 +262,7 @@ static int lua_gpio_index(lua_State *L) {
         lua_pushinteger(L, gpio_fd(gpio));
         return 1;
     } else if (strcmp(field, "pin") == 0) {
-        lua_pushunsigned(L, gpio_pin(gpio));
-        return 1;
-    } else if (strcmp(field, "supports_interrupts") == 0) {
-        bool supported;
-        int ret;
-
-        if ((ret = gpio_supports_interrupts(gpio, &supported)) < 0)
-            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
-
-        lua_pushboolean(L, supported);
+        lua_pushunsigned(L, gpio_line(gpio));
         return 1;
     } else if (strcmp(field, "direction") == 0) {
         gpio_direction_t direction;
@@ -330,8 +311,6 @@ static int lua_gpio_newindex(lua_State *L) {
     if (strcmp(field, "fd") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
     else if (strcmp(field, "pin") == 0)
-        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
-    else if (strcmp(field, "supports_interrupts") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
     else if (strcmp(field, "direction") == 0) {
         gpio_direction_t direction;

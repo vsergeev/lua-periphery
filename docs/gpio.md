@@ -33,7 +33,6 @@ gpio.edge                   mutable <string>
     * `"out"` - Output, initialized to low
     * `"low"` - Output, initialized to low
     * `"high"` - Output, initialized to high
-    * `"preserve"` - Preserve existing direction
 
 * GPIO Edge
     * `"none"` - No interrupt edge
@@ -48,16 +47,13 @@ GPIO(pin <number>[, direction <string>]) --> <GPIO object>
 GPIO{pin=<number>[, direction=<string>]} --> <GPIO object>
 ```
 
-Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the optional specified direction. Direction can be "in", "out", "low", "high", "preserve" (see [constants](#constants) above). Direction defaults to "preserve".
+Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the optional specified direction. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
 
 Example:
 ``` lua
 -- Open GPIO 23 with output direction
 gpio = GPIO(23, "out")
 gpio = GPIO{pin=23, direction="out"}
-
--- Open GPIO 46 with preserved direction
-gpio = GPIO(46)
 ```
 
 Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
@@ -115,15 +111,6 @@ Raises a [GPIO error](#errors) on assignment.
 Property gpio.pin   immutable <number>
 ```
 Get the GPIO object's pin.
-
-Raises a [GPIO error](#errors) on assignment.
-
---------------------------------------------------------------------------------
-
-``` lua
-Property gpio.supports_interrupts   immutable <boolean>
-```
-Get whether or not this GPIO supports edge interrupts configurable with the `gpio.edge` property.
 
 Raises a [GPIO error](#errors) on assignment.
 
@@ -198,7 +185,7 @@ print("gpio_in properties")
 print(string.format("\tpin: %d", gpio_in.pin))
 print(string.format("\tfd: %d", gpio_in.fd))
 print(string.format("\tdirection: %s", gpio_in.direction))
-print(string.format("\tsupports interrupts: %s", gpio_in.direction))
+print(string.format("\tedge: %s", gpio_in.edge))
 
 gpio_in:close()
 gpio_out:close()

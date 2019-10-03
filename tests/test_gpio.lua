@@ -10,8 +10,8 @@ local GPIO = periphery.GPIO
 
 --------------------------------------------------------------------------------
 
-local pin_input = nil
-local pin_output = nil
+local line_input = nil
+local line_output = nil
 
 --------------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ function test_open_config_close()
     passert_periphery_error("non-existent GPIO", function () gpio = GPIO(9999, "in") end, "GPIO_ERROR_OPEN", 22)
 
     -- Open legitimate GPIO
-    passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output, "in") end)
-    passert("property pin", gpio.pin == pin_output)
+    passert_periphery_success("real GPIO", function () gpio = GPIO(line_output, "in") end)
+    passert("property line", gpio.line == line_output)
     passert("fd > 0", gpio.fd > 0)
     io.write(string.format("gpio: %s\n", gpio:__tostring()))
 
@@ -63,9 +63,6 @@ function test_open_config_close()
     -- Set invalid edge
     passert_periphery_error("set invalid edge", function () gpio.edge = "blah" end, "GPIO_ERROR_ARG")
 
-    -- Check interrupt edge support
-    passert("check interrupt edge support", gpio.supports_interrupts == true)
-
     -- Set edge none, check edge none
     passert_periphery_success("set edge none", function () gpio.edge = "none" end)
     passert("edge is none", gpio.edge == "none")
@@ -86,34 +83,10 @@ function test_open_config_close()
     passert_periphery_success("close gpio", function () gpio:close() end)
 
     -- Open with table arguments
-    passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output, direction="in"} end)
-    passert("property pin", gpio.pin == pin_output)
+    passert_periphery_success("real GPIO", function () gpio = GPIO{line = line_output, direction="in"} end)
+    passert("property line", gpio.line == line_output)
     passert("direction is in", gpio.direction == "in")
     passert_periphery_success("set direction out", function () gpio.direction = "out" end)
-    passert_periphery_success("close gpio", function () gpio:close() end)
-
-    -- Open with preserved direction
-    passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output, "preserve") end)
-    passert("direction is preserved out", gpio.direction == "out")
-    passert_periphery_success("set direction in", function () gpio.direction = "in" end)
-    passert_periphery_success("close gpio", function () gpio:close() end)
-
-    -- Open with preserved direction by table arguments
-    passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output, direction = "preserve"} end)
-    passert("direction is preserved in", gpio.direction == "in")
-    passert_periphery_success("set direction out", function () gpio.direction = "out" end)
-    passert_periphery_success("close gpio", function () gpio:close() end)
-    passert_periphery_success("close gpio", function () gpio:close() end)
-
-    -- Open with default preserved direction
-    passert_periphery_success("real GPIO", function () gpio = GPIO(pin_output) end)
-    passert("direction is preserved out", gpio.direction == "out")
-    passert_periphery_success("set direction in", function () gpio.direction = "in" end)
-    passert_periphery_success("close gpio", function () gpio:close() end)
-
-    -- Open with default preserved direction by table arguments
-    passert_periphery_success("real GPIO", function () gpio = GPIO{pin = pin_output} end)
-    passert("direction is preserved in", gpio.direction == "in")
     passert_periphery_success("close gpio", function () gpio:close() end)
 end
 
@@ -124,9 +97,9 @@ function test_loopback()
 
     ptest()
 
-    -- Open in and out pins
-    passert_periphery_success("open gpio in", function () gpio_in = GPIO(pin_input, "in") end)
-    passert_periphery_success("open gpio out", function () gpio_out = GPIO(pin_output, "out") end)
+    -- Open in and out lines
+    passert_periphery_success("open gpio in", function () gpio_in = GPIO(line_input, "in") end)
+    passert_periphery_success("open gpio out", function () gpio_out = GPIO(line_output, "out") end)
 
     -- Drive out low, check in low
     print("Drive out low, check in low")
@@ -163,7 +136,7 @@ function test_interactive()
 
     ptest()
 
-    passert_periphery_success("gpio out open", function () gpio = GPIO(pin_output, "out") end)
+    passert_periphery_success("gpio out open", function () gpio = GPIO(line_output, "out") end)
 
     print("Starting interactive test. Get out your multimeter, buddy!")
     print("Press enter to continue...")
@@ -200,8 +173,8 @@ if #arg < 2 then
     os.exit(1)
 end
 
-pin_input = tonumber(arg[1])
-pin_output = tonumber(arg[2])
+line_input = tonumber(arg[1])
+line_output = tonumber(arg[2])
 
 test_arguments()
 pokay("Arguments test passed.")
