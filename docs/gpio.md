@@ -1,6 +1,6 @@
 ### NAME
 
-GPIO module for Linux userspace sysfs GPIOs.
+GPIO module for Linux userspace character device and sysfs GPIOs.
 
 ### SYNOPSIS
 
@@ -8,9 +8,12 @@ GPIO module for Linux userspace sysfs GPIOs.
 local periphery = require('periphery')
 local GPIO = periphery.GPIO
 
--- Constructor
-gpio = GPIO(pin <number>[, direction <string>])
-gpio = GPIO{pin=<number>[, direction=<string>]}
+-- Constructor (for character device GPIO)
+gpio = GPIO(path <string>, line <number|string>, direction <string>)
+gpio = GPIO{path=<string>, line=<number|string>, direction=<string>}
+-- Constructor (for sysfs GPIO)
+gpio = GPIO(line <number>, direction <string>)
+gpio = GPIO{line=<number>, direction=<string>}
 
 -- Methods
 gpio:read() --> <boolean>
@@ -18,12 +21,18 @@ gpio:write(value <boolean>)
 gpio:poll(timeout_ms <number>) --> <boolean>
 gpio:close()
 
+-- Methods (for character device GPIO)
+gpio:read_event() --> {edge=<string>, timestamp=<number>}
+
 -- Properties
-gpio.fd                     immutable <number>
-gpio.pin                    immutable <number>
-gpio.supports_interrupts    immutable <boolean>
-gpio.direction              mutable <string>
-gpio.edge                   mutable <string>
+gpio.direction      mutable <string>
+gpio.edge           mutable <string>
+gpio.line           immutable <number>
+gpio.fd             immutable <number>
+gpio.name           immutable <number>
+gpio.chip_fd        immutable <number>
+gpio.chip_name      immutable <number>
+gpio.chip_label     immutable <number>
 ```
 
 ### CONSTANTS
@@ -42,12 +51,34 @@ gpio.edge                   mutable <string>
 
 ### DESCRIPTION
 
+##### Character device GPIO
+
 ``` lua
-GPIO(pin <number>[, direction <string>]) --> <GPIO object>
-GPIO{pin=<number>[, direction=<string>]} --> <GPIO object>
+GPIO(path <string>, line <number|string>, direction <string>) --> <GPIO object>
+GPIO{path=<string>, line=<number|string>, direction=<string>} --> <GPIO object>
 ```
 
-Instantiate a GPIO object and open the sysfs GPIO corresponding to the specified pin, with the optional specified direction. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
+Instantiate a GPIO object and open the character device GPIO with the specified line and direction at the specified GPIO chip path (e.g. `/dev/gpiochip0`). Line can be number or by string name. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
+
+Example:
+``` lua
+-- Open GPIO 23 with output direction
+gpio = GPIO(23, "out")
+gpio = GPIO{pin=23, direction="out"}
+```
+
+Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
+
+--------------------------------------------------------------------------------
+
+##### `sysfs` GPIO
+
+``` lua
+GPIO(line <number>, direction <string>) --> <GPIO object>
+GPIO{line=<number>, direction=<string>} --> <GPIO object>
+```
+
+Instantiate a GPIO object and open the sysfs GPIO with the specified line and direction. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
 
 Example:
 ``` lua
@@ -83,7 +114,22 @@ gpio:poll(timeout_ms <number>) --> <boolean>
 ```
 Poll a GPIO for the edge event configured with the `.edge` property.
 
+For character device GPIOs, the edge event should be consumed with `read_event()`. For sysfs GPIOs, the edge event should be consumed with `read()`.
+
 `timeout_ms` can be a positive number for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
+
+Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO error](#errors) on failure.
+
+--------------------------------------------------------------------------------
+
+``` lua
+gpio:read_event() --> {edge=<string>, timestamp=<number>}
+```
+Read the edge event that occurred with the GPIO.
+
+This method is intended for use with character device GPIOs and is unsupported by sysfs GPIOs.
+
+`edge` is the edge event that occured, either "rising" or "falling" (see [constants](#constants) above). `timestamp` is event time reported by Linux, in nanoseconds.
 
 Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO error](#errors) on failure.
 
@@ -92,27 +138,9 @@ Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO err
 ``` lua
 gpio:close()
 ```
-Close the sysfs GPIO.
+Close the GPIO.
 
 Raises a [GPIO error](#errors) on failure.
-
---------------------------------------------------------------------------------
-
-``` lua
-Property gpio.fd    immutable <number>
-```
-Get the file descriptor for the underlying sysfs GPIO "value" file of the GPIO object.
-
-Raises a [GPIO error](#errors) on assignment.
-
---------------------------------------------------------------------------------
-
-``` lua
-Property gpio.pin   immutable <number>
-```
-Get the GPIO object's pin.
-
-Raises a [GPIO error](#errors) on assignment.
 
 --------------------------------------------------------------------------------
 
@@ -121,7 +149,7 @@ Property gpio.direction     mutable <string>
 ```
 Get or set the GPIO's direction. Can be "in" or "out" (see [constants](#constants) above).
 
-Raises a [GPIO error](#errors) on assignment with invalid direction.
+Raises a [GPIO error](#errors) on assignment with an invalid direction.
 
 --------------------------------------------------------------------------------
 
@@ -130,7 +158,65 @@ Property gpio.edge          mutable <string>
 ```
 Get or set the GPIO's interrupt edge. Can be "none", "rising", "falling", or "both" (see [constants](#constants) above).
 
-Raises a [GPIO error](#errors) on assignment with an invalid edge or if edge interrupts are not supported.
+Raises a [GPIO error](#errors) on assignment with an invalid edge.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.line          immutable <number>
+```
+Get the GPIO object's line number.
+
+Raises a [GPIO error](#errors) on assignment.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.fd            immutable <number>
+```
+Get the line file descriptor of the GPIO object.
+
+Raises a [GPIO error](#errors) on assignment.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.name          immutable <string>
+```
+Get the line name of the GPIO.
+
+This method is intended for use with character device GPIOs and always returns the empty string for sysfs GPIOs.
+
+Raises a [GPIO error](#errors) on assignment.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.chip_fd       immutable <number>
+```
+Get the GPIO chip file descriptor of the GPIO object.
+
+This method is intended for use with character device GPIOs and is unsupported by sysfs GPIOs.
+
+Raises a [GPIO error](#errors) on assignment. Raises a [GPIO error](#errors) for sysfs GPIOs.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.chip_name     immutable <string>
+```
+Get the name of the GPIO chip associated with the GPIO.
+
+Raises a [GPIO error](#errors) on assignment.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.chip_label    immutable <string>
+```
+Get the label of the GPIO chip associated with the GPIO.
+
+Raises a [GPIO error](#errors) on assignment.
 
 ### ERRORS
 
@@ -173,19 +259,23 @@ false
 ``` lua
 local GPIO = require('periphery').GPIO
 
--- Open GPIO 10 with input direction
-local gpio_in = GPIO(10, "in")
--- Open GPIO 12 with output direction
-local gpio_out = GPIO(12, "out")
+-- Open GPIO /dev/gpiochip0 line 10 with input direction
+local gpio_in = GPIO("/dev/gpiochip0", 10, "in")
+-- Open GPIO /dev/gpiochip0 line 12 with output direction
+local gpio_out = GPIO("/dev/gpiochip0", 12, "out")
 
 local value = gpio_in:read()
 gpio_out:write(not value)
 
 print("gpio_in properties")
-print(string.format("\tpin: %d", gpio_in.pin))
-print(string.format("\tfd: %d", gpio_in.fd))
 print(string.format("\tdirection: %s", gpio_in.direction))
 print(string.format("\tedge: %s", gpio_in.edge))
+print(string.format("\tline: %d", gpio_in.line))
+print(string.format("\tfd: %d", gpio_in.fd))
+print(string.format("\tname: %s", gpio_in.name))
+print(string.format("\tchip_fd: %d", gpio_in.chip_fd))
+print(string.format("\tchip_name: %s", gpio_in.chip_name))
+print(string.format("\tchip_label: %s", gpio_in.chip_label))
 
 gpio_in:close()
 gpio_out:close()
