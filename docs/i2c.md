@@ -8,9 +8,6 @@ I2C module for Linux userspace `i2c-dev` devices.
 local periphery = require('periphery')
 local I2C = periphery.I2C
 
--- Module Version
-I2C.version     <string>
-
 -- Constructor
 i2c = I2C(device <path string>)
 i2c = I2C{device=<path string>}
@@ -46,13 +43,6 @@ I2C.I2C_M_RECV_LEN
     * `I2C.I2C_M_RECV_LEN`
 
 ### DESCRIPTION
-
-``` lua
-Property I2C.version    <string>
-```
-Version of I2C module as a string (e.g. "1.0.0").
-
---------------------------------------------------------------------------------
 
 ``` lua
 I2C(device <path string>) --> <I2C object>

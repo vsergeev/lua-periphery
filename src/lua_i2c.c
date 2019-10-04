@@ -21,9 +21,6 @@
 local periphery = require('periphery')
 local I2C = periphery.I2C
 
--- Module Version
-I2C.version     <string>
-
 -- Constructor
 i2c = I2C(device <path string>)
 i2c = I2C{device=<path string>}
@@ -361,7 +358,7 @@ LUALIB_API int luaopen_periphery_i2c(lua_State *L) {
     lua_pushstring(L, "protected metatable");
     lua_setfield(L, -2, "__metatable");
 
-    /* Create {__call = lua_i2c_new, __metatable = "protected metatable", version = ...} table */
+    /* Create {__call = lua_i2c_new, __metatable = "protected metatable"} table */
     lua_newtable(L);
     lua_pushcclosure(L, lua_i2c_new, 0);
     lua_setfield(L, -2, "__call");
@@ -369,9 +366,6 @@ LUALIB_API int luaopen_periphery_i2c(lua_State *L) {
     lua_setfield(L, -2, "__metatable");
     /* Set it as the metatable for the periphery.I2C metatable */
     lua_setmetatable(L, -2);
-
-    lua_pushstring(L, LUA_PERIPHERY_VERSION);
-    lua_setfield(L, -2, "version");
 
     /* Copy useful message flags from <linux/i2c.h> */
     /* The constants below are available from kernel version 3.2 onwards */

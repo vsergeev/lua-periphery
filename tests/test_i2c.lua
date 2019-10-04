@@ -28,9 +28,6 @@ function test_open_config_close()
 
     ptest()
 
-    -- Make sure module version exists
-    passert("module version", I2C.version ~= nil)
-
     -- Open non-existent i2c device
     passert_periphery_error("non-existent device", function () i2c = I2C("/foo/bar") end, "I2C_ERROR_OPEN")
 
