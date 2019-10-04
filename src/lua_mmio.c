@@ -21,9 +21,6 @@
 local periphery = require('periphery')
 local MMIO = periphery.MMIO
 
--- Module Version
-MMIO.version    <string>
-
 -- Constructor
 mmio = MMIO(address <number>, size <number>)
 mmio = MMIO{address=<number>, size=<number>}
@@ -451,7 +448,7 @@ LUALIB_API int luaopen_periphery_mmio(lua_State *L) {
     lua_pushstring(L, "protected metatable");
     lua_setfield(L, -2, "__metatable");
 
-    /* Create {__call = lua_mmio_new, __metatable = "protected metatable", version = ...} table */
+    /* Create {__call = lua_mmio_new, __metatable = "protected metatable"} table */
     lua_newtable(L);
     lua_pushcclosure(L, lua_mmio_new, 0);
     lua_setfield(L, -2, "__call");
@@ -459,9 +456,6 @@ LUALIB_API int luaopen_periphery_mmio(lua_State *L) {
     lua_setfield(L, -2, "__metatable");
     /* Set it as the metatable for the periphery.MMIO metatable */
     lua_setmetatable(L, -2);
-
-    lua_pushstring(L, LUA_PERIPHERY_VERSION);
-    lua_setfield(L, -2, "version");
 
     return 1;
 }

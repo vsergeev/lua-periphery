@@ -31,9 +31,6 @@ function test_open_config_close()
 
     ptest()
 
-    -- Make sure module version exists
-    passert("module version", MMIO.version ~= nil)
-
     -- Open aligned base
     passert_periphery_success("open aligned", function () mmio = MMIO(CONTROL_MODULE_BASE, PAGE_SIZE) end)
 

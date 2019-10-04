@@ -8,9 +8,6 @@ MMIO module for the Linux userspace `/dev/mem` device.
 local periphery = require('periphery')
 local MMIO = periphery.MMIO
 
--- Module Version
-MMIO.version    <string>
-
 -- Constructor
 mmio = MMIO(address <number>, size <number>)
 mmio = MMIO{address=<number>, size=<number>}
@@ -32,13 +29,6 @@ mmio.size       immutable <number>
 ```
 
 ### DESCRIPTION
-
-``` lua
-Property MMIO.version   immutable <string>
-```
-Version of MMIO module as a string (e.g. "1.0.0").
-
---------------------------------------------------------------------------------
 
 ``` lua
 MMIO(address <number>, size <number>) --> <MMIO Object>
