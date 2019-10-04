@@ -36,9 +36,6 @@ function test_open_config_close()
 
     ptest()
 
-    -- Make sure module version exists
-    passert("module version", Serial.version ~= nil)
-
     passert_periphery_success("open serial", function () serial = Serial(device, 115200) end)
 
     -- Confirm default settings

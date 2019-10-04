@@ -21,9 +21,6 @@
 local periphery = require('periphery')
 local Serial = periphery.Serial
 
--- Module Version
-Serial.version      <string>
-
 -- Constructor
 serial = Serial(device <path string>, baudrate <number>)
 serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
@@ -586,7 +583,7 @@ LUALIB_API int luaopen_periphery_serial(lua_State *L) {
     lua_pushstring(L, "protected metatable");
     lua_setfield(L, -2, "__metatable");
 
-    /* Create {__call = lua_serial_new, __metatable = "protected metatable", version = ...} table */
+    /* Create {__call = lua_serial_new, __metatable = "protected metatable"} table */
     lua_newtable(L);
     lua_pushcclosure(L, lua_serial_new, 0);
     lua_setfield(L, -2, "__call");
@@ -594,9 +591,6 @@ LUALIB_API int luaopen_periphery_serial(lua_State *L) {
     lua_setfield(L, -2, "__metatable");
     /* Set it as the metatable for the periphery.Serial metatable */
     lua_setmetatable(L, -2);
-
-    lua_pushstring(L, LUA_PERIPHERY_VERSION);
-    lua_setfield(L, -2, "version");
 
     return 1;
 }

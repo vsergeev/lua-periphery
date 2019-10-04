@@ -8,9 +8,6 @@ Serial module for Linux userspace termios `tty` devices.
 local periphery = require('periphery')
 local Serial = periphery.Serial
 
--- Module Version
-Serial.version      <string>
-
 -- Constructor
 serial = Serial(device <path string>, baudrate <number>)
 serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
@@ -43,13 +40,6 @@ serial.fd           immutable <number>
     * `"even"` - Even parity
 
 ### DESCRIPTION
-
-``` lua
-Property Serial.version     immutable <string>
-```
-Version of Serial module as a string (e.g. "1.0.0").
-
---------------------------------------------------------------------------------
 
 ``` lua
 Serial(device <path string>, baudrate <number>) --> <Serial object>
