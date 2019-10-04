@@ -30,9 +30,6 @@ function test_open_config_close()
 
     ptest()
 
-    -- Make sure module version exists
-    passert("module version", SPI.version ~= nil)
-
     -- Normal open
     passert_periphery_success("spi open", function () spi = SPI(device, 1, 100000) end)
 

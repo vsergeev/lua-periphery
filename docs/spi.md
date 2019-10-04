@@ -8,9 +8,6 @@ SPI module for Linux userspace `spidev` devices.
 local periphery = require('periphery')
 local SPI = periphery.SPI
 
--- Module Version
-SPI.version         <string>
-
 -- Constructor
 spi = SPI(device <path string>, mode <number>, max_speed <number>)
 spi = SPI{device=<path string>, mode=<number>, max_speed=<number>, bit_order="msb", bits_per_word=8, extra_flags=0}
@@ -35,13 +32,6 @@ spi.extra_flags     mutable <number>
     * `"lsb"` - Least significant bit first transfer
 
 ### DESCRIPTION
-
-``` lua
-Property SPI.version    immutable <string>
-```
-Version of SPI module as a string (e.g. "1.0.0").
-
---------------------------------------------------------------------------------
 
 ``` lua
 SPI(device <path string>, mode <number>, max_speed <number>) --> <SPI object>

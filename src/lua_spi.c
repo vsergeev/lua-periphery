@@ -21,9 +21,6 @@
 local periphery = require('periphery')
 local SPI = periphery.SPI
 
--- Module Version
-SPI.version         <string>
-
 -- Constructor
 spi = SPI(device <path string>, mode <number>, max_speed <number>)
 spi = SPI{device=<path string>, mode=<number>, max_speed=<number>, bit_order="msb", bits_per_word=8, extra_flags=0}
@@ -447,7 +444,7 @@ LUALIB_API int luaopen_periphery_spi(lua_State *L) {
     lua_pushstring(L, "protected metatable");
     lua_setfield(L, -2, "__metatable");
 
-    /* Create {__call = lua_spi_new, __metatable = "protected metatable", version = ...} table */
+    /* Create {__call = lua_spi_new, __metatable = "protected metatable"} table */
     lua_newtable(L);
     lua_pushcclosure(L, lua_spi_new, 0);
     lua_setfield(L, -2, "__call");
@@ -455,9 +452,6 @@ LUALIB_API int luaopen_periphery_spi(lua_State *L) {
     lua_setfield(L, -2, "__metatable");
     /* Set it as the metatable for the periphery.SPI metatable */
     lua_setmetatable(L, -2);
-
-    lua_pushstring(L, LUA_PERIPHERY_VERSION);
-    lua_setfield(L, -2, "version");
 
     return 1;
 }
