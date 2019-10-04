@@ -33,9 +33,6 @@ function test_open_config_close()
 
     ptest()
 
-    -- Make sure module version exists
-    passert("module version", GPIO.version ~= nil)
-
     -- Open non-existent GPIO (export should fail with EINVAL)
     passert_periphery_error("non-existent GPIO", function () gpio = GPIO(9999, "in") end, "GPIO_ERROR_OPEN", 22)
 

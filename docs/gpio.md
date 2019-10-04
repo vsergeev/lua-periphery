@@ -8,9 +8,6 @@ GPIO module for Linux userspace sysfs GPIOs.
 local periphery = require('periphery')
 local GPIO = periphery.GPIO
 
--- Module Version
-GPIO.version                <string>
-
 -- Constructor
 gpio = GPIO(pin <number>[, direction <string>])
 gpio = GPIO{pin=<number>[, direction=<string>]}
@@ -45,13 +42,6 @@ gpio.edge                   mutable <string>
     * `"both"` - Both edges (X -> !X transition)
 
 ### DESCRIPTION
-
-``` lua
-Property GPIO.version   immutable <string>
-```
-Version of GPIO module as a string (e.g. "1.0.0").
-
---------------------------------------------------------------------------------
 
 ``` lua
 GPIO(pin <number>[, direction <string>]) --> <GPIO object>
