@@ -2,18 +2,28 @@ dist: bionic
 
 language: c
 
-sudo: required
-
 compiler:
   - clang
   - gcc
 
-install:
-  - sudo apt-get install lua5.1 liblua5.1-dev lua5.2 liblua5.2-dev
-  # todo: add lua5.3
+addons:
+  apt:
+    packages:
+      - lua5.1
+      - liblua5.1-dev
+      - lua5.2
+      - liblua5.2-dev
+      - lua5.3
+      - liblua5.3-dev
+      - luajit
+      - libluajit-5.1-dev
 
 script:
     - make clean all LUA=lua5.1
     - lua5.1 -e "require('periphery')"
     - make clean all LUA=lua5.2
     - lua5.2 -e "require('periphery')"
+    - make clean all LUA=lua5.3
+    - lua5.3 -e "require('periphery')"
+    - make clean all LUA=luajit
+    - luajit -e "require('periphery')"
