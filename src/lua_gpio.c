@@ -21,9 +21,12 @@
 local periphery = require('periphery')
 local GPIO = periphery.GPIO
 
--- Constructor
-gpio = GPIO(pin <number>, direction <string>)
-gpio = GPIO{pin=<number>, direction=<string>}
+-- Constructor (for character device GPIO)
+gpio = GPIO(path <string>, line <number>, direction <string>)
+gpio = GPIO{path=<string>, line=<number>, direction=<string>}
+-- Constructor (for sysfs GPIO)
+gpio = GPIO(line <number>, direction <string>)
+gpio = GPIO{line=<number>, direction=<string>}
 
 -- Methods
 gpio:read() --> <boolean>
@@ -31,11 +34,18 @@ gpio:write(value <boolean>)
 gpio:poll(timeout_ms <number>) --> <boolean>
 gpio:close()
 
+-- Methods (for character device GPIO)
+gpio:read_event() --> {edge=<string>, timestamp=<number>}
+
 -- Properties
-gpio.fd                     immutable <number>
-gpio.pin                    immutable <number>
 gpio.direction              mutable <string>
 gpio.edge                   mutable <string>
+gpio.line                   immutable <number>
+gpio.fd                     immutable <number>
+gpio.name                   immutable <number>
+gpio.chip_fd                immutable <number>
+gpio.chip_name              immutable <number>
+gpio.chip_label             immutable <number>
 */
 
 static const char *gpio_error_code_strings[] = {
@@ -85,29 +95,58 @@ static void lua_gpio_checktype(lua_State *L, int index, int type) {
 
 static int lua_gpio_open(lua_State *L) {
     gpio_t *gpio;
-    unsigned int pin;
+    const char *path = NULL;
+    unsigned int line;
+    const char *line_name = NULL;
     gpio_direction_t direction;
     const char *str_direction;
     int ret;
 
     gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
-    /* Arguments passed in table form */
     if (lua_istable(L, 2)) {
-        lua_getfield(L, 2, "pin");
-        if (!lua_isnumber(L, -1))
-            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'pin', should be number");
-        pin = lua_tounsigned(L, -1);
+        /* Arguments passed in table form */
+
+        lua_getfield(L, 2, "path");
+        if (!lua_isnil(L, -1)) {
+            if (lua_type(L, -1) != LUA_TSTRING)
+                return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'path', should be string");
+
+            path = lua_tostring(L, -1);
+        }
+
+        lua_getfield(L, 2, "line");
+        if (lua_type(L, -1) == LUA_TNUMBER)
+            line = lua_tounsigned(L, -1);
+        else if (path && lua_type(L, -1) == LUA_TSTRING)
+            line_name = lua_tostring(L, -1);
+        else
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'line', should be number or string");
 
         lua_getfield(L, 2, "direction");
-        if (lua_isstring(L, -1))
+        if (lua_type(L, -1) != LUA_TSTRING)
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'direction', should be string");
         str_direction = lua_tostring(L, -1);
+    } else if (lua_gettop(L) > 3) {
+        /* Arguments passed on stack: path (string), line (number|string), direction (string) */
 
-    /* Arguments passed on stack */
+        lua_gpio_checktype(L, 2, LUA_TSTRING);
+        path = lua_tostring(L, 2);
+
+        if (lua_type(L, 3) == LUA_TNUMBER)
+            line = lua_tounsigned(L, 3);
+        else if (lua_type(L, 3) == LUA_TSTRING)
+            line_name = lua_tostring(L, 3);
+        else
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid argument #3 (number or string expected, got %s)", lua_typename(L, lua_type(L, 3)));
+
+        lua_gpio_checktype(L, 4, LUA_TSTRING);
+        str_direction = lua_tostring(L, 4);
     } else {
+        /* Arguments paseed on stack: line(number), direction (string) */
+
         lua_gpio_checktype(L, 2, LUA_TNUMBER);
-        pin = lua_tounsigned(L, 2);
+        line = lua_tounsigned(L, 2);
 
         lua_gpio_checktype(L, 3, LUA_TSTRING);
         str_direction = lua_tostring(L, 3);
@@ -124,8 +163,19 @@ static int lua_gpio_open(lua_State *L) {
     else
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid direction, should be 'in', 'out', 'low', 'high'");
 
-    if ((ret = gpio_open_sysfs(gpio, pin, direction)) < 0)
-        return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
+    if (path && line_name) {
+        /* character device gpio */
+        if ((ret = gpio_open_name(gpio, path, line_name, direction)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
+    } else if (path) {
+        /* character device gpio */
+        if ((ret = gpio_open(gpio, path, line, direction)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
+    } else {
+        /* sysfs gpio */
+        if ((ret = gpio_open_sysfs(gpio, line, direction)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
+    }
 
     return 0;
 }
@@ -204,6 +254,34 @@ static int lua_gpio_poll(lua_State *L) {
     return 1;
 }
 
+static int lua_gpio_read_event(lua_State *L) {
+    gpio_t *gpio;
+    gpio_edge_t edge;
+    uint64_t timestamp;
+    int ret;
+
+    gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
+
+    if ((ret = gpio_read_event(gpio, &edge, &timestamp)) < 0)
+        return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+    lua_newtable(L);
+    /* .edge string */
+    switch (edge) {
+        case GPIO_EDGE_NONE: lua_pushstring(L, "none"); break;
+        case GPIO_EDGE_RISING: lua_pushstring(L, "rising"); break;
+        case GPIO_EDGE_FALLING: lua_pushstring(L, "falling"); break;
+        case GPIO_EDGE_BOTH: lua_pushstring(L, "both"); break;
+        default: lua_pushstring(L, "unknown"); break;
+    }
+    lua_setfield(L, -2, "edge");
+    /* .timestamp number */
+    lua_pushunsigned(L, timestamp);
+    lua_setfield(L, -2, "timestamp");
+
+    return 1;
+}
+
 static int lua_gpio_close(lua_State *L) {
     gpio_t *gpio;
     int ret;
@@ -230,7 +308,7 @@ static int lua_gpio_gc(lua_State *L) {
 
 static int lua_gpio_tostring(lua_State *L) {
     gpio_t *gpio;
-    char gpio_str[128];
+    char gpio_str[256];
 
     gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
@@ -258,11 +336,46 @@ static int lua_gpio_index(lua_State *L) {
 
     gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
-    if (strcmp(field, "fd") == 0) {
+    if (strcmp(field, "line") == 0) {
+        lua_pushunsigned(L, gpio_line(gpio));
+        return 1;
+    } else if (strcmp(field, "fd") == 0) {
         lua_pushinteger(L, gpio_fd(gpio));
         return 1;
-    } else if (strcmp(field, "pin") == 0) {
-        lua_pushunsigned(L, gpio_line(gpio));
+    } else if (strcmp(field, "name") == 0) {
+        char name[64];
+        int ret;
+
+        if ((ret = gpio_name(gpio, name, sizeof(name))) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushstring(L, name);
+        return 1;
+    } else if (strcmp(field, "chip_fd") == 0) {
+        int ret;
+
+        if ((ret = gpio_chip_fd(gpio)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushinteger(L, ret);
+        return 1;
+    } else if (strcmp(field, "chip_name") == 0) {
+        char chip_name[64];
+        int ret;
+
+        if ((ret = gpio_chip_name(gpio, chip_name, sizeof(chip_name))) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushstring(L, chip_name);
+        return 1;
+    } else if (strcmp(field, "chip_label") == 0) {
+        char chip_label[64];
+        int ret;
+
+        if ((ret = gpio_chip_label(gpio, chip_label, sizeof(chip_label))) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushstring(L, chip_label);
         return 1;
     } else if (strcmp(field, "direction") == 0) {
         gpio_direction_t direction;
@@ -308,9 +421,17 @@ static int lua_gpio_newindex(lua_State *L) {
 
     field = lua_tostring(L, 2);
 
-    if (strcmp(field, "fd") == 0)
+    if (strcmp(field, "line") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
-    else if (strcmp(field, "pin") == 0)
+    else if (strcmp(field, "fd") == 0)
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
+    else if (strcmp(field, "name") == 0)
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
+    else if (strcmp(field, "chip_fd") == 0)
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
+    else if (strcmp(field, "chip_name") == 0)
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
+    else if (strcmp(field, "chip_label") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
     else if (strcmp(field, "direction") == 0) {
         gpio_direction_t direction;
@@ -368,6 +489,7 @@ static const struct luaL_Reg periphery_gpio_m[] = {
     {"read", lua_gpio_read},
     {"write", lua_gpio_write},
     {"poll", lua_gpio_poll},
+    {"read_event", lua_gpio_read_event},
     {"__gc", lua_gpio_gc},
     {"__tostring", lua_gpio_tostring},
     {"__index", lua_gpio_index},

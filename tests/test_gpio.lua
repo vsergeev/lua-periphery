@@ -21,10 +21,13 @@ function test_arguments()
     ptest()
 
     -- Invalid open types
-    passert_periphery_error("invalid open types", function () gpio = GPIO("abc", "blah") end, "GPIO_ERROR_ARG")
+    passert_periphery_error("invalid open types", function () gpio = GPIO("abc", "in") end, "GPIO_ERROR_ARG")
+    passert_periphery_error("invalid open types", function () gpio = GPIO{line="abc", direction="in"} end, "GPIO_ERROR_ARG")
     passert_periphery_error("invalid open types", function () gpio = GPIO(1, 1) end, "GPIO_ERROR_ARG")
+    passert_periphery_error("invalid open types", function () gpio = GPIO{line=1, direction=1} end, "GPIO_ERROR_ARG")
     -- Invalid direction
     passert_periphery_error("invalid direction", function () gpio = GPIO(1, "blah") end, "GPIO_ERROR_ARG")
+    passert_periphery_error("invalid direction", function () gpio = GPIO{line=1, direction="blah"} end, "GPIO_ERROR_ARG")
 end
 
 function test_open_config_close()
@@ -38,9 +41,20 @@ function test_open_config_close()
 
     -- Open legitimate GPIO
     passert_periphery_success("real GPIO", function () gpio = GPIO(line_output, "in") end)
+
+    -- Check properties
     passert("property line", gpio.line == line_output)
-    passert("fd > 0", gpio.fd > 0)
-    io.write(string.format("gpio: %s\n", gpio:__tostring()))
+    passert("direction is in", gpio.direction == "in")
+    passert("fd >= 0", gpio.fd >= 0)
+
+    -- Set invalid direction
+    passert_periphery_error("set invalid direction", function () gpio.direction = "blah" end, "GPIO_ERROR_ARG")
+    -- Set invalid edge
+    passert_periphery_error("set invalid edge", function () gpio.edge = "blah" end, "GPIO_ERROR_ARG")
+    -- Unsupported property
+    passert_periphery_error("unsupported property", function () local ret = gpio.chip_fd end, "GPIO_ERROR_UNSUPPORTED")
+    -- Unsupported method
+    passert_periphery_error("unsupported method", function () gpio:read_event() end, "GPIO_ERROR_UNSUPPORTED")
 
     -- Set direction out, check direction out, check value low
     passert_periphery_success("set direction out", function () gpio.direction = "out" end)
@@ -54,14 +68,10 @@ function test_open_config_close()
     passert_periphery_success("set direction high", function () gpio.direction = "high" end)
     passert("direction is in", gpio.direction == "out")
     passert("value is high", gpio:read() == true)
+
     -- Set direction in, check direction in
     passert_periphery_success("set direction", function () gpio.direction = "in" end)
     passert("direction is in", gpio.direction == "in")
-
-    -- Set invalid direction
-    passert_periphery_error("set invalid direction", function () gpio.direction = "blah" end, "GPIO_ERROR_ARG")
-    -- Set invalid edge
-    passert_periphery_error("set invalid edge", function () gpio.edge = "blah" end, "GPIO_ERROR_ARG")
 
     -- Set edge none, check edge none
     passert_periphery_success("set edge none", function () gpio.edge = "none" end)
@@ -83,9 +93,10 @@ function test_open_config_close()
     passert_periphery_success("close gpio", function () gpio:close() end)
 
     -- Open with table arguments
-    passert_periphery_success("real GPIO", function () gpio = GPIO{line = line_output, direction="in"} end)
+    passert_periphery_success("real GPIO", function () gpio = GPIO{line=line_output, direction="in"} end)
     passert("property line", gpio.line == line_output)
     passert("direction is in", gpio.direction == "in")
+    passert("fd >= 0", gpio.fd >= 0)
     passert_periphery_success("set direction out", function () gpio.direction = "out" end)
     passert_periphery_success("close gpio", function () gpio:close() end)
 end
@@ -112,14 +123,30 @@ function test_loopback()
     passert("value is true", gpio_in:read() == true)
 
     -- Check poll falling 1 -> 0 interrupt
-    print("Check poll faliing 1 -> 0 interrupt")
+    print("Check poll falling 1 -> 0 interrupt")
     passert_periphery_success("set gpio in edge falling", function () gpio_in.edge = "falling" end)
     passert_periphery_success("write gpio out low", function () gpio_out:write(false) end)
     passert("gpio in polled 1", gpio_in:poll(1000) == true)
     passert("value is low", gpio_in:read() == false)
+
     -- Check poll rising 0 -> 1 interrupt
-    print("Check poll faliing 0 -> 1 interrupt")
+    print("Check poll rising 0 -> 1 interrupt")
     passert_periphery_success("set gpio in edge rising", function () gpio_in.edge = "rising" end)
+    passert_periphery_success("write gpio out high", function () gpio_out:write(true) end)
+    passert("gpio in polled 1", gpio_in:poll(1000) == true)
+    passert("value is high", gpio_in:read() == true)
+
+    -- Set edge both
+    passert_periphery_success("set gpio in edge both", function () gpio_in.edge = "both" end)
+
+    -- Check poll falling 1 -> 0 interrupt
+    print("Check poll falling 1 -> 0 interrupt")
+    passert_periphery_success("write gpio out low", function () gpio_out:write(false) end)
+    passert("gpio in polled 1", gpio_in:poll(1000) == true)
+    passert("value is low", gpio_in:read() == false)
+
+    -- Check poll rising 0 -> 1 interrupt
+    print("Check poll rising 0 -> 1 interrupt")
     passert_periphery_success("write gpio out high", function () gpio_out:write(true) end)
     passert("gpio in polled 1", gpio_in:poll(1000) == true)
     passert("value is high", gpio_in:read() == true)
@@ -141,6 +168,11 @@ function test_interactive()
     print("Starting interactive test. Get out your multimeter, buddy!")
     print("Press enter to continue...")
     io.read()
+
+    -- Check tostring
+    io.write(string.format("GPIO description: %s\n", gpio:__tostring()))
+    print("GPIO description looks OK? y/n")
+    passert("interactive success", io.read() == "y")
 
     -- Drive GPIO out low
     passert_periphery_success("gpio out low", function () gpio:write(false) end)
