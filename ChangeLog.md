@@ -1,3 +1,15 @@
+* v2.0.1 - 10/08/2019
+    * Bump c-periphery dependency version to v2.0.1 for character device GPIO
+      support, to fix blocking read performance in Serial, and for error
+      detection of unexpected empty read in Serial module.
+    * Add support for character device GPIOs to the GPIO module.
+        * Remove support for preserve direction from GPIO constructor.
+        * Update error codes.
+    * Simplify error codes for MMIO, I2C, and Serial modules.
+    * Remove duplicated package version from all modules.
+    * Update tests with running hints for Raspberry Pi 3.
+    * Improve cross-compilation support in Makefile.
+
 * v1.1.3 - 04/28/2018
     * Bump c-periphery dependency version to v1.1.3 to fix data's most
       significant bit getting stripped when opening a serial port with parity
