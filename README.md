@@ -2,7 +2,7 @@
 
 ## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
 Using Python or C? Check out the [python-periphery](https://github.com/vsergeev/python-periphery) and [c-periphery](https://github.com/vsergeev/c-periphery) projects.
 
@@ -13,10 +13,10 @@ Using Python or C? Check out the [python-periphery](https://github.com/vsergeev/
 ``` lua
 local GPIO = require('periphery').GPIO
 
--- Open GPIO 10 with input direction
-local gpio_in = GPIO(10, "in")
--- Open GPIO 12 with output direction
-local gpio_out = GPIO(12, "out")
+-- Open GPIO /dev/gpiochip0 line 10 with input direction
+local gpio_in = GPIO("/dev/gpiochip0", 10, "in")
+-- Open GPIO /dev/gpiochip0 line 12 with output direction
+local gpio_out = GPIO("/dev/gpiochip0", 12, "out")
 
 local value = gpio_in:read()
 gpio_out:write(not value)
