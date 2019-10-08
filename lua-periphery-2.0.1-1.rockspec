@@ -1,13 +1,13 @@
 package = "lua-periphery"
-version = "1.1.3-1"
+version = "2.0.1-1"
 source = {
     url = "gitrec://github.com/vsergeev/lua-periphery",
-    tag = "v1.1.3",
+    tag = "v2.0.1",
 }
 description = {
     summary = "Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua",
     detailed = [[
-        lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including BeagleBone, Raspberry Pi, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.1 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+        lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery requires Lua 5.1 or greater, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
     ]],
     homepage = "https://github.com/vsergeev/lua-periphery",
     maintainer = "Vanya Sergeev <vsergeev@gmail.com>",
