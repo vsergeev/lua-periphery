@@ -137,6 +137,11 @@ function test_interactive()
     print("Press enter to continue...")
     io.read()
 
+    -- Check tostring
+    io.write(string.format("Serial description: %s\n", serial:__tostring()))
+    print("Serial description looks OK? y/n")
+    passert("interactive success", io.read() == "y")
+
     print("Press enter to start transfer...")
     io.read()
     passert("serial write", serial:write(buf) == #buf)
