@@ -59,6 +59,11 @@ function test_interactive()
     print("Press enter to continue...")
     io.read()
 
+    -- Check tostring
+    io.write(string.format("I2C description: %s\n", i2c:__tostring()))
+    print("I2C description looks OK? y/n")
+    passert("interactive success", io.read() == "y")
+
     -- There isn't much we can do without assuming a device on the other end,
     -- because I2C needs an acknowledgement bit on each transferred byte.
     --
