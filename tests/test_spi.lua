@@ -112,6 +112,11 @@ function test_interactive()
     print("Press enter to continue...")
     io.read()
 
+    -- Check tostring
+    io.write(string.format("SPI description: %s\n", spi:__tostring()))
+    print("SPI description looks OK? y/n")
+    passert("interactive success", io.read() == "y")
+
     -- Mode 0 transfer
     print("Press enter to start transfer...")
     io.read()
