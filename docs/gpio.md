@@ -29,10 +29,10 @@ gpio.direction      mutable <string>
 gpio.edge           mutable <string>
 gpio.line           immutable <number>
 gpio.fd             immutable <number>
-gpio.name           immutable <number>
+gpio.name           immutable <string>
 gpio.chip_fd        immutable <number>
-gpio.chip_name      immutable <number>
-gpio.chip_label     immutable <number>
+gpio.chip_name      immutable <string>
+gpio.chip_label     immutable <string>
 ```
 
 ### CONSTANTS
