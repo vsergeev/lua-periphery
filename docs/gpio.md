@@ -64,7 +64,7 @@ Example:
 ``` lua
 -- Open GPIO 23 with output direction
 gpio = GPIO(23, "out")
-gpio = GPIO{pin=23, direction="out"}
+gpio = GPIO{line=23, direction="out"}
 ```
 
 Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
@@ -84,7 +84,7 @@ Example:
 ``` lua
 -- Open GPIO 23 with output direction
 gpio = GPIO(23, "out")
-gpio = GPIO{pin=23, direction="out"}
+gpio = GPIO{line=23, direction="out"}
 ```
 
 Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.
