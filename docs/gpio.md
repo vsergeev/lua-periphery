@@ -129,9 +129,7 @@ Read the edge event that occurred with the GPIO.
 
 This method is intended for use with character device GPIOs and is unsupported by sysfs GPIOs.
 
-`edge` is the edge event that occured, either "rising" or "falling" (see [constants](#constants) above). `timestamp` is event time reported by Linux, in nanoseconds.
-
-Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO error](#errors) on failure.
+Returns a table describing the edge event. `edge` is the edge event that occurred, either "rising" or "falling" (see [constants](#constants) above). `timestamp` is event time reported by Linux, in nanoseconds. Raises a [GPIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
