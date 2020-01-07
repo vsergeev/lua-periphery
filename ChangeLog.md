@@ -1,3 +1,11 @@
+* v2.1.0 - 01/07/2020
+    * Bump c-periphery dependency version to v2.1.0 for new LED and PWM
+      modules.
+    * Add LED module.
+    * Add PWM module.
+    * Fix synopsis, examples, and read_event() description in GPIO module
+      documentation.
+
 * v2.0.1 - 10/08/2019
     * Bump c-periphery dependency version to v2.0.1 for character device GPIO
       support, to fix blocking read performance in Serial, and for error
