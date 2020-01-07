@@ -1,6 +1,6 @@
 ### NAME
 
-Module for GPIO, LED, SPI, I2C, MMIO, and Serial Linux peripheral I/O interfaces.
+Module for GPIO, LED, PWM, SPI, I2C, MMIO, and Serial Linux peripheral I/O interfaces.
 
 ### SYNOPSIS
 
@@ -13,6 +13,7 @@ periphery.version   <string>
 -- Submodules
 periphery.GPIO
 periphery.LED
+periphery.PWM
 periphery.SPI
 periphery.I2C
 periphery.MMIO
@@ -44,6 +45,13 @@ GPIO module. See [GPIO documentation](gpio.md) for more information.
 periphery.LED
 ```
 LED module. See [LED documentation](led.md) for more information.
+
+--------------------------------------------------------------------------------
+
+``` lua
+periphery.PWM
+```
+PWM module. See [PWM documentation](pwm.md) for more information.
 
 --------------------------------------------------------------------------------
 

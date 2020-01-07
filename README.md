@@ -1,8 +1,8 @@
 # lua-periphery [![Build Status](https://travis-ci.org/vsergeev/lua-periphery.svg?branch=master)](https://travis-ci.org/vsergeev/lua-periphery) [![GitHub release](https://img.shields.io/github/release/vsergeev/lua-periphery.svg?maxAge=7200)](https://github.com/vsergeev/lua-periphery) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vsergeev/lua-periphery/blob/master/LICENSE)
 
-## Linux Peripheral I/O (GPIO, LED, SPI, I2C, MMIO, Serial) with Lua
+## Linux Peripheral I/O (GPIO, LED, PWM, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a library for GPIO, LED, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, LED, PWM, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
 Using Python or C? Check out the [python-periphery](https://github.com/vsergeev/python-periphery) and [c-periphery](https://github.com/vsergeev/c-periphery) projects.
 
@@ -48,6 +48,27 @@ led:close()
 ```
 
 [Go to LED documentation.](docs/led.md)
+
+### PWM
+
+``` lua
+local PWM = require('periphery').PWM
+
+-- Open PWM chip 0, channel 10
+local pwm = PWM(0, 10)
+
+-- Set frequency to 1 kHz
+pwm.frequency = 1e3
+-- Set duty cycle to 75%
+pwm.duty_cycle = 0.75
+
+-- Enable PWM output
+pwm:enable()
+
+pwm:close()
+```
+
+[Go to PWM documentation.](docs/pwm.md)
 
 ### SPI
 

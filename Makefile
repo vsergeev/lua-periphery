@@ -1,5 +1,5 @@
 LIB = periphery.so
-SRCS = src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_led.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c
+SRCS = src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_led.c src/lua_pwm.c src/lua_spi.c src/lua_i2c.c src/lua_serial.c
 
 C_PERIPHERY = c-periphery
 C_PERIPHERY_LIB = $(C_PERIPHERY)/periphery.a
