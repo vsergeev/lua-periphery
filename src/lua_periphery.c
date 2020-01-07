@@ -15,6 +15,7 @@
 #include "lua_compat.h"
 
 LUALIB_API int luaopen_periphery_gpio(lua_State *L);
+LUALIB_API int luaopen_periphery_led(lua_State *L);
 LUALIB_API int luaopen_periphery_spi(lua_State *L);
 LUALIB_API int luaopen_periphery_mmio(lua_State *L);
 LUALIB_API int luaopen_periphery_i2c(lua_State *L);
@@ -73,6 +74,9 @@ LUALIB_API int luaopen_periphery(lua_State *L) {
 
     luaopen_periphery_gpio(L);
     lua_setfield(L, -2, "GPIO");
+
+    luaopen_periphery_led(L);
+    lua_setfield(L, -2, "LED");
 
     luaopen_periphery_spi(L);
     lua_setfield(L, -2, "SPI");

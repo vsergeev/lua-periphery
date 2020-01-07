@@ -1,8 +1,8 @@
 # lua-periphery [![Build Status](https://travis-ci.org/vsergeev/lua-periphery.svg?branch=master)](https://travis-ci.org/vsergeev/lua-periphery) [![GitHub release](https://img.shields.io/github/release/vsergeev/lua-periphery.svg?maxAge=7200)](https://github.com/vsergeev/lua-periphery) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vsergeev/lua-periphery/blob/master/LICENSE)
 
-## Linux Peripheral I/O (GPIO, SPI, I2C, MMIO, Serial) with Lua
+## Linux Peripheral I/O (GPIO, LED, SPI, I2C, MMIO, Serial) with Lua
 
-lua-periphery is a library for GPIO, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
+lua-periphery is a library for GPIO, LED, SPI, I2C, MMIO, and Serial peripheral I/O interface access in userspace Linux. It is useful in embedded Linux environments (including Raspberry Pi, BeagleBone, etc. platforms) for interfacing with external peripherals. lua-periphery is compatible with Lua 5.1 (including LuaJIT), Lua 5.2, and Lua 5.3, has no dependencies outside the standard C library and Linux, is portable across architectures, and is MIT licensed.
 
 Using Python or C? Check out the [python-periphery](https://github.com/vsergeev/python-periphery) and [c-periphery](https://github.com/vsergeev/c-periphery) projects.
 
@@ -26,6 +26,28 @@ gpio_out:close()
 ```
 
 [Go to GPIO documentation.](docs/gpio.md)
+
+### LED
+
+``` lua
+local LED = require('periphery').LED
+
+-- Open LED led0
+local led = LED("led0")
+
+-- Turn on LED (set max brightness)
+led:write(true)
+
+-- Set half brightness
+led:write(math.floor(led.max_brightness / 2))
+
+-- Turn off LED (set zero brightness)
+led:write(false)
+
+led:close()
+```
+
+[Go to LED documentation.](docs/led.md)
 
 ### SPI
 
