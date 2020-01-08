@@ -13,7 +13,7 @@ led = LED(name <string>)
 led = LED{name=<string>}
 
 -- Methods
-led:read() --> <number>
+led:read() --> <boolean>
 led:write(value <boolean|number>)
 led:close()
 
