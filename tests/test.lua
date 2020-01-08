@@ -59,7 +59,7 @@ function passert_periphery_error(name, func, code, c_errno)
             print(string.format("%s  %s %s():%d  %s    error code mismatch. expected %s, got %s", STR_FAIL, callerInfo.short_src, callerInfo.name, callerInfo.currentline, name, code, err.code))
             os.exit(1)
         end
-        if errno and err.c_errno ~= c_errno then
+        if c_errno and err.c_errno ~= c_errno then
             print(string.format("%s  %s %s():%d  %s    c_errno mismatch. expected %d, got %d", STR_FAIL, callerInfo.short_src, callerInfo.name, callerInfo.currentline, name, errno, err.c_errno))
             os.exit(1)
         end
