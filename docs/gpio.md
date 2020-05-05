@@ -24,6 +24,9 @@ gpio:close()
 -- Methods (for character device GPIO)
 gpio:read_event() --> {edge=<string>, timestamp=<number>}
 
+-- Static methods
+GPIO.poll_multiple(gpios <table>, [timeout_ms <number|nil>]) --> <table>
+
 -- Properties
 gpio.direction      mutable <string>
 gpio.edge           mutable <string>
@@ -130,6 +133,19 @@ Read the edge event that occurred with the GPIO.
 This method is intended for use with character device GPIOs and is unsupported by sysfs GPIOs.
 
 Returns a table describing the edge event. `edge` is the edge event that occurred, either "rising" or "falling" (see [constants](#constants) above). `timestamp` is event time reported by Linux, in nanoseconds. Raises a [GPIO error](#errors) on failure.
+
+--------------------------------------------------------------------------------
+
+``` lua
+GPIO.poll_multiple(gpios <table>, timeout_ms <number|nil>) --> <table>
+```
+Poll multiple GPIOs for the edge event configured with the `.edge` property with an optional timeout.
+
+For character device GPIOs, the edge event should be consumed with `read_event()`. For sysfs GPIOs, the edge event should be consumed with `read()`.
+
+`gpios` should be an array of GPIO objects to poll. `timeout_ms` can be a positive number for a timeout in milliseconds, zero for a non-blocking poll, or negative or nil for a blocking poll. Default is a blocking poll.
+
+Returns an array of GPIO objects for which an edge event occurred. Raises a [GPIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 

@@ -171,6 +171,34 @@ function test_loopback()
     -- Check poll timeout
     passert("poll timed out", gpio_in:poll(1000) == false)
 
+    -- Test poll_multiple() API with one GPIO
+
+    -- Check poll falling 1 -> 0 interrupt
+    print("Check poll falling 1 -> 0 interrupt with poll_multiple()")
+    passert_periphery_success("write gpio out low", function () gpio_out:write(false) end)
+    local gpios_ready = GPIO.poll_multiple({gpio_in}, 1000)
+    passert("gpios_ready length is 1", #gpios_ready == 1)
+    passert("gpios_ready[1] is gpio in", gpios_ready[1] == gpio_in)
+    passert("value is low", gpio_in:read() == false)
+    local event = gpio_in:read_event()
+    passert("event edge is falling", event.edge == "falling")
+    passert("event timestamp is non-zero", event.timestamp ~= 0)
+
+    -- Check poll rising 0 -> 1 interrupt
+    print("Check poll rising 0 -> 1 interrupt with poll_multiple()")
+    passert_periphery_success("write gpio out high", function () gpio_out:write(true) end)
+    local gpios_ready = GPIO.poll_multiple({gpio_in}, 1000)
+    passert("gpios_ready length is 1", #gpios_ready == 1)
+    passert("gpios_ready[1] is gpio_in", gpios_ready[1] == gpio_in)
+    passert("value is high", gpio_in:read() == true)
+    local event = gpio_in:read_event()
+    passert("event edge is rising", event.edge == "rising")
+    passert("event timestamp is non-zero", event.timestamp ~= 0)
+
+    -- Check poll timeout
+    local gpios_ready = GPIO.poll_multiple({gpio_in}, 1000)
+    passert("poll_multiple timed out", #gpios_ready == 0)
+
     passert_periphery_success("close gpio in", function () gpio_in:close() end)
     passert_periphery_success("close gpio out", function () gpio_out:close() end)
 end

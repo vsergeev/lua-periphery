@@ -37,6 +37,9 @@ gpio:close()
 -- Methods (for character device GPIO)
 gpio:read_event() --> {edge=<string>, timestamp=<number>}
 
+-- Static methods
+GPIO.poll_multiple(gpios <table>, [timeout_ms <number|nil>]) --> <table>
+
 -- Properties
 gpio.direction              mutable <string>
 gpio.edge                   mutable <string>
@@ -287,6 +290,59 @@ static int lua_gpio_read_event(lua_State *L) {
     return 1;
 }
 
+static int lua_gpio_poll_multiple(lua_State *L) {
+    int ret;
+
+    lua_gpio_checktype(L, 1, LUA_TTABLE);
+
+    unsigned int count = luaL_len(L, 1);
+    gpio_t *gpios[count];
+    bool gpios_ready[count];
+
+    /* Extract the gpio_t pointers from the input table of userdatas */
+    for (unsigned int i = 0; i < count; i++) {
+        /* Get the userdata from the input table */
+        lua_pushunsigned(L, i+1);
+        lua_gettable(L, 1);
+        gpios[i] = *((gpio_t **)luaL_checkudata(L, -1, "periphery.GPIO"));
+        /* Pop the userdata */
+        lua_pop(L, 1);
+    }
+
+    int timeout_ms;
+
+    /* Optional timeout argument */
+    if (lua_isnone(L, 2) || lua_isnil(L, 2))
+        timeout_ms = -1;
+    else if (lua_isnumber(L, 2))
+        timeout_ms = lua_tointeger(L, 2);
+    else
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of argument 'timeout_ms', should be number or nil");
+
+    /* Poll */
+    if ((ret = gpio_poll_multiple(gpios, count, timeout_ms, gpios_ready)) < 0)
+        return lua_gpio_error(L, ret, errno, "Error: polling multiple GPIOs");
+
+    /* Create a new output table with GPIOs that had edge events occur */
+    lua_newtable(L);
+
+    for (unsigned int i = 0, j = 1; ret && i < count; i++) {
+        if (gpios_ready[i]) {
+            /* Push the index into the output table */
+            lua_pushunsigned(L, j++);
+
+            /* Get the userdata from the input table */
+            lua_pushunsigned(L, i+1);
+            lua_gettable(L, 1);
+
+            /* Set the user data in the output table */
+            lua_settable(L, -3);
+        }
+    }
+
+    return 1;
+}
+
 static int lua_gpio_close(lua_State *L) {
     gpio_t *gpio;
     int ret;
@@ -495,6 +551,7 @@ static const struct luaL_Reg periphery_gpio_m[] = {
     {"write", lua_gpio_write},
     {"poll", lua_gpio_poll},
     {"read_event", lua_gpio_read_event},
+    {"poll_multiple", lua_gpio_poll_multiple},
     {"__gc", lua_gpio_gc},
     {"__tostring", lua_gpio_tostring},
     {"__index", lua_gpio_index},
