@@ -70,6 +70,8 @@ Read up to `length` number of bytes from the serial port with an optional timeou
 
 For a non-blocking or timeout bound read, `read()` may return less than the requested number of bytes.
 
+For a blocking read with the VMIN setting configured, `read()` will block until at least VMIN bytes are read. For a blocking read with both VMIN and VTIME settings configured, `read()` will block until at least VMIN bytes are read or the VTIME interbyte timeout expires after the last byte read. In either case, `read()` may return less than the requested number of bytes.
+
 Returns bytes read as a string. Raises a [Serial error](#errors) on failure.
 
 --------------------------------------------------------------------------------
