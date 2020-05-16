@@ -30,6 +30,8 @@ serial.parity       mutable <string>
 serial.stopbits     mutable <number>
 serial.xonxoff      mutable <boolean>
 serial.rtscts       mutable <boolean>
+serial.vmin         mutable <number>
+serial.vtime        mutable <number>
 serial.fd           immutable <number>
 ```
 
@@ -137,6 +139,22 @@ Property serial.rtscts      mutable <boolean>
 Get or set the baudrate, data bits, parity, stop bits, software flow control (xonxoff), or hardware flow control (rtscts), respectively, of the underlying `tty` device.
 
 Databits can be 5, 6, 7, or 8. Stopbits can be 1, or 2. Parity can be "none", "odd", or "even" (see [constants](#constants) above).
+
+Raises a [Serial error](#errors) on invalid assignment.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property serial.vmin        mutable <number>
+Property serial.vtime       mutable <number>
+```
+Get or set the termios VMIN and VTIME settings, respectively, of the underlying `tty` device.
+
+VMIN specifies the minimum number of bytes returned from a blocking read. VTIME specifies the timeout in seconds of a blocking read.
+
+When both VMIN and VTIME settings are configured, VTIME acts as an interbyte timeout that restarts on every byte received, and a blocking read will block until either VMIN bytes are read or the VTIME timeout expires after the last byte read. See the `termios` man page for more information.
+
+VMIN can be between 0 and 255. VTIME can be between 0 and 25.5 seconds, with a resolution of 0.1 seconds.
 
 Raises a [Serial error](#errors) on invalid assignment.
 

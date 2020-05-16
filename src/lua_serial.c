@@ -460,6 +460,24 @@ static int lua_serial_index(lua_State *L) {
 
         lua_pushboolean(L, rtscts);
         return 1;
+    } else if (strcmp(field, "vmin") == 0) {
+        unsigned int vmin;
+        int ret;
+
+        if ((ret = serial_get_vmin(serial, &vmin)) < 0)
+            return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
+
+        lua_pushunsigned(L, vmin);
+        return 1;
+    } else if (strcmp(field, "vtime") == 0) {
+        float vtime;
+        int ret;
+
+        if ((ret = serial_get_vtime(serial, &vtime)) < 0)
+            return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
+
+        lua_pushnumber(L, vtime);
+        return 1;
     }
 
     return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: unknown property");
@@ -551,6 +569,28 @@ static int lua_serial_newindex(lua_State *L) {
         rtscts = lua_toboolean(L, 3);
 
         if ((ret = serial_set_rtscts(serial, rtscts)) < 0)
+            return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
+
+        return 0;
+    } else if (strcmp(field, "vmin") == 0) {
+        unsigned int vmin;
+        int ret;
+
+        lua_serial_checktype(L, 3, LUA_TNUMBER);
+        vmin = lua_tounsigned(L, 3);
+
+        if ((ret = serial_set_vmin(serial, vmin)) < 0)
+            return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
+
+        return 0;
+    } else if (strcmp(field, "vtime") == 0) {
+        float vtime;
+        int ret;
+
+        lua_serial_checktype(L, 3, LUA_TNUMBER);
+        vtime = lua_tonumber(L, 3);
+
+        if ((ret = serial_set_vtime(serial, vtime)) < 0)
             return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
 
         return 0;
