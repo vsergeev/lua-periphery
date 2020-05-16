@@ -64,9 +64,11 @@ Returns a new Serial object on success. Raises a [Serial error](#errors) on fail
 serial:read(length <number>, [timeout_ms <number|nil>]) --> <string>
 serial:read{length=<length>, timeout_ms=nil} --> <string>
 ```
-Read up to `length` number of bytes from the serial port with an optional timeout. `timeout_ms` can be 0 for a non-blocking read, negative for a blocking read that will block until `length` number of bytes are read, or positive specifying a timeout in milliseconds for a blocking read. The default is a blocking read that will block until `length` number of bytes are read.
+Read up to `length` number of bytes from the serial port with an optional timeout. `timeout_ms` can be positive for a blocking read with a timeout in milliseconds, zero for a non-blocking read, or negative or nil for a blocking read that will block until `length` number of bytes are read. Default is a blocking read.
 
-For a non-blocking or timeout bound read, `read()` returns a string with the bytes read, whose length is less than or equal to the length requested. For a blocking read (default), `read()` returns a string with the bytes read, whose length is the length requested. Raises a [Serial error](#errors) on failure.
+For a non-blocking or timeout bound read, `read()` may return less than the requested number of bytes.
+
+Returns bytes read as a string. Raises a [Serial error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
