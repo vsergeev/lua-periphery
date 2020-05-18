@@ -31,7 +31,7 @@ gpio = GPIO{line=<number>, direction=<string>}
 -- Methods
 gpio:read() --> <boolean>
 gpio:write(value <boolean>)
-gpio:poll(timeout_ms <number>) --> <boolean>
+gpio:poll([timeout_ms <number|nil>]) --> <boolean>
 gpio:close()
 
 -- Methods (for character device GPIO)
@@ -242,9 +242,14 @@ static int lua_gpio_poll(lua_State *L) {
     int ret;
 
     gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
-    lua_gpio_checktype(L, 2, LUA_TNUMBER);
 
-    timeout_ms = lua_tointeger(L, 2);
+    /* Optional timeout argument */
+    if (lua_isnone(L, 2) || lua_isnil(L, 2))
+        timeout_ms = -1;
+    else if (lua_isnumber(L, 2))
+        timeout_ms = lua_tointeger(L, 2);
+    else
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of argument 'timeout_ms', should be number or nil");
 
     if ((ret = gpio_poll(gpio, timeout_ms)) < 0)
         return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));

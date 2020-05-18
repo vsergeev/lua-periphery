@@ -18,7 +18,7 @@ gpio = GPIO{line=<number>, direction=<string>}
 -- Methods
 gpio:read() --> <boolean>
 gpio:write(value <boolean>)
-gpio:poll(timeout_ms <number>) --> <boolean>
+gpio:poll([timeout_ms <number|nil>]) --> <boolean>
 gpio:close()
 
 -- Methods (for character device GPIO)
@@ -110,13 +110,13 @@ Raises a [GPIO error](#errors) on failure.
 --------------------------------------------------------------------------------
 
 ``` lua
-gpio:poll(timeout_ms <number>) --> <boolean>
+gpio:poll([timeout_ms <number|nil>]) --> <boolean>
 ```
-Poll a GPIO for the edge event configured with the `.edge` property.
+Poll a GPIO for the edge event configured with the `.edge` property with an optional timeout.
 
 For character device GPIOs, the edge event should be consumed with `read_event()`. For sysfs GPIOs, the edge event should be consumed with `read()`.
 
-`timeout_ms` can be a positive number for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
+`timeout_ms` can be a positive number for a timeout in milliseconds, zero for a non-blocking poll, or negative or nil for a blocking poll. Default is a blocking poll.
 
 Returns `true` if an edge event occurred, `false` on timeout. Raises a [GPIO error](#errors) on failure.
 
