@@ -230,7 +230,7 @@ static int lua_serial_read(lua_State *L) {
         else if (lua_isnumber(L, -1))
             timeout_ms = lua_tounsigned(L, -1);
         else
-            return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: invalid type of table argument 'timeout', should be nil or number");
+            return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: invalid type of table argument 'timeout_ms', should be nil or number");
 
     /* Arguments passed normally */
     } else {
@@ -244,7 +244,7 @@ static int lua_serial_read(lua_State *L) {
         else if (lua_isnumber(L, 3))
             timeout_ms = lua_tounsigned(L, 3);
         else
-            return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: invalid type argument 'timeout', should be number or nil");
+            return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: invalid type of argument 'timeout_ms', should be number or nil");
     }
 
     if ((buf = malloc(len)) == NULL)
