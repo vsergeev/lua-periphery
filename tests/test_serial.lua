@@ -46,6 +46,8 @@ function test_open_config_close()
     passert("stopbits is 1", serial.stopbits == 1)
     passert("xonxoff is false", serial.xonxoff == false)
     passert("rtscts is false", serial.rtscts == false)
+    passert("vmin is 0", serial.vmin == 0)
+    passert("vtime is 0", serial.vtime == 0)
     io.write(string.format("serial: %s\n", serial:__tostring()))
 
     -- Change some stuff around
@@ -61,12 +63,15 @@ function test_open_config_close()
     passert("stopbits is 2", serial.stopbits == 2)
     passert_periphery_success("set xonxoff to true", function () serial.xonxoff = true end)
     passert("xonxoff is true", serial.xonxoff == true)
-    --[[
+    --[[ -- Test serial port may not support rtscts
     passert_periphery_success("set rtscts to true", function () serial.rtscts = true end)
     print(serial.rtscts)
     passert("rtscts is true", serial.rtscts == true)
     ]]--
-    -- Test serial port may not support rtscts
+    passert_periphery_success("set vmin to 50", function () serial.vmin = 50 end)
+    passert("vmin is 50", serial.vmin == 50)
+    passert_periphery_success("set vtime to 15.3", function () serial.vtime = 15.3 end)
+    passert("vtime is 15.3", math.abs(serial.vtime - 15.3) < 0.1)
 
     passert_periphery_success("close serial", function () serial:close() end)
 end
@@ -121,6 +126,25 @@ function test_loopback()
     -- Assuming we weren't context switched out for a second and weren't on a
     -- thin time boundary ;)
     passert("almost no time elapsed", (toc-tic) == 0)
+
+    -- Test blocking read with vmin=5 termios timeout
+    passert_periphery_success("set vmin to 5", function () serial.vmin = 5 end)
+    -- Write 5, read back 5 (vmin)
+    passert("write 5 bytes of lorem ipsum", serial:write(lorem_ipsum:sub(1, 5)) == 5)
+    passert_periphery_success("flush", function () serial:flush() end)
+    passert_periphery_success("read blocking with termios timeout", function () buf = serial:read(#lorem_ipsum) end)
+    passert("compare write/read partial lorem ipsum", buf == lorem_ipsum:sub(1, 5))
+
+    -- Test blocking read with vmin=5, vtime=2 termios timeout
+    passert_periphery_success("set vtime to 2", function () serial.vtime = 2 end)
+    -- Write 3, read back 3 (< vmin, but > vtime interbyte timeout)
+    passert("write 5 bytes of lorem ipsum", serial:write(lorem_ipsum:sub(1, 3)) == 3)
+    passert_periphery_success("flush", function () serial:flush() end)
+    local tic = os.time()
+    passert_periphery_success("read blocking with termios timeout", function () buf = serial:read(#lorem_ipsum) end)
+    local toc = os.time()
+    passert("compare write/read partial lorem ipsum", buf == lorem_ipsum:sub(1, 3))
+    passert("time elapsed", (toc-tic) > 1)
 
     passert_periphery_success("close serial", function () serial:close() end)
 end
