@@ -26,8 +26,8 @@ serial = Serial(device <path string>, baudrate <number>)
 serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
 
 -- Methods
-serial:read(length <number>, [timeout <number>]) --> <string>
-serial:read{length=<length>, timeout=nil} --> <string>
+serial:read(length <number>, [timeout_ms <number|nil>]) --> <string>
+serial:read{length=<length>, timeout_ms=nil} --> <string>
 serial:write(data <string>) --> <number>
 serial:poll([timeout_ms <number|nil>]) --> <boolean>
 serial:flush()
