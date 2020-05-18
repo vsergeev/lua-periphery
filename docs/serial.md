@@ -16,7 +16,7 @@ serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="non
 serial:read(length <number>, [timeout <number>]) --> <string>
 serial:read{length=<length>, timeout=nil} --> <string>
 serial:write(data <string>) --> <number>
-serial:poll(timeout_ms) --> <boolean>
+serial:poll([timeout_ms <number|nil>]) --> <boolean>
 serial:flush()
 serial:input_waiting() --> <number>
 serial:output_waiting() --> <number>
@@ -78,9 +78,9 @@ Returns the number of bytes written. Raises a [Serial error](#errors) on failure
 --------------------------------------------------------------------------------
 
 ``` lua
-serial:poll(timeout) --> <boolean>
+serial:poll([timeout_ms <number|nil>]) --> <boolean>
 ```
-Poll for data available for reading from the serial port. `timeout` can be positive for a timeout in milliseconds, 0 for a non-blocking poll, or a negative number for a blocking poll.
+Poll for data available for reading from the serial port with an optional timeout. `timeout_ms` can be positive for a timeout in milliseconds, zero for a non-blocking poll, or negative or nil for a blocking poll. Default is a blocking poll.
 
 Returns `true` if data is available for reading from the serial port, otherwise returns `false`. Raises a [Serial error](#errors) on failure.
 

@@ -29,7 +29,7 @@ serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="non
 serial:read(length <number>, [timeout <number>]) --> <string>
 serial:read{length=<length>, timeout=nil} --> <string>
 serial:write(data <string>) --> <number>
-serial:poll(timeout_ms) --> <boolean>
+serial:poll([timeout_ms <number|nil>]) --> <boolean>
 serial:flush()
 serial:input_waiting() --> <number>
 serial:output_waiting() --> <number>
@@ -328,9 +328,13 @@ static int lua_serial_poll(lua_State *L) {
 
     serial = *((serial_t **)luaL_checkudata(L, 1, "periphery.Serial"));
 
-    lua_serial_checktype(L, 2, LUA_TNUMBER);
-
-    timeout_ms = lua_tounsigned(L, 2);
+    /* Optional timeout argument */
+    if (lua_isnone(L, 2) || lua_isnil(L, 2))
+        timeout_ms = -1;
+    else if (lua_isnumber(L, 2))
+        timeout_ms = lua_tointeger(L, 2);
+    else
+        return lua_serial_error(L, SERIAL_ERROR_ARG, 0, "Error: invalid type of argument 'timeout_ms', should be number or nil");
 
     if ((ret = serial_poll(serial, timeout_ms)) < 0)
         return lua_serial_error(L, ret, serial_errno(serial), "Error: %s", serial_errmsg(serial));
