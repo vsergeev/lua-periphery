@@ -32,7 +32,6 @@ end
 
 function test_open_config_close()
     local gpio = nil
-    local value = nil
 
     ptest()
 
@@ -104,7 +103,6 @@ end
 function test_loopback()
     local gpio_in = nil
     local gpio_out = nil
-    local value = nil
 
     ptest()
 
