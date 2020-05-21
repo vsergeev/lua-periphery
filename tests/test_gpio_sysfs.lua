@@ -50,8 +50,14 @@ function test_open_config_close()
     passert_periphery_error("set invalid direction", function () gpio.direction = "blah" end, "GPIO_ERROR_ARG")
     -- Set invalid edge
     passert_periphery_error("set invalid edge", function () gpio.edge = "blah" end, "GPIO_ERROR_ARG")
+    -- Unsupported property bias
+    passert_periphery_error("unsupported property bias", function () local ret = gpio.bias end, "GPIO_ERROR_UNSUPPORTED")
+    passert_periphery_error("unsupported property bias", function () gpio.bias = "pull_up" end, "GPIO_ERROR_UNSUPPORTED")
+    -- Unsupported property drive
+    passert_periphery_error("unsupported property drive", function () local ret = gpio.drive end, "GPIO_ERROR_UNSUPPORTED")
+    passert_periphery_error("unsupported property drive", function () gpio.drive = "open_drain" end, "GPIO_ERROR_UNSUPPORTED")
     -- Unsupported property
-    passert_periphery_error("unsupported property", function () local ret = gpio.chip_fd end, "GPIO_ERROR_UNSUPPORTED")
+    passert_periphery_error("unsupported property chip_fd", function () local ret = gpio.chip_fd end, "GPIO_ERROR_UNSUPPORTED")
     -- Unsupported method
     passert_periphery_error("unsupported method", function () gpio:read_event() end, "GPIO_ERROR_UNSUPPORTED")
 
@@ -67,6 +73,13 @@ function test_open_config_close()
     passert_periphery_success("set direction high", function () gpio.direction = "high" end)
     passert("direction is in", gpio.direction == "out")
     passert("value is high", gpio:read() == true)
+
+    -- Set inverted true, check inverted true
+    passert_periphery_success("set inverted true", function () gpio.inverted = true end)
+    passert("inverted is true", gpio.inverted == true)
+    -- Set inverted false, check inverted false
+    passert_periphery_success("set inverted false", function () gpio.inverted = false end)
+    passert("inverted is false", gpio.inverted == false)
 
     -- Set direction in, check direction in
     passert_periphery_success("set direction", function () gpio.direction = "in" end)

@@ -57,6 +57,10 @@ function test_open_config_close()
     passert_periphery_error("set invalid direction", function () gpio.direction = "blah" end, "GPIO_ERROR_ARG")
     -- Set invalid edge
     passert_periphery_error("set invalid edge", function () gpio.edge = "blah" end, "GPIO_ERROR_ARG")
+    -- Set invalid bias
+    passert_periphery_error("set invalid bias", function () gpio.bias = "blah" end, "GPIO_ERROR_ARG")
+    -- Set invalid drive
+    passert_periphery_error("set invalid drive", function () gpio.drive = "blah" end, "GPIO_ERROR_ARG")
 
     -- Set direction out, check direction out, check value low
     passert_periphery_success("set direction out", function () gpio.direction = "out" end)
@@ -70,6 +74,24 @@ function test_open_config_close()
     passert_periphery_success("set direction high", function () gpio.direction = "high" end)
     passert("direction is in", gpio.direction == "out")
     passert("value is high", gpio:read() == true)
+
+    -- Set drive open drain, check drive open drain
+    passert_periphery_success("set drive open drain", function () gpio.drive = "open_drain" end)
+    passert("drive is open drain", gpio.drive == "open_drain")
+    -- Set drive open source, check drive open source
+    passert_periphery_success("set drive open source", function () gpio.drive = "open_source" end)
+    passert("drive is open source", gpio.drive == "open_source")
+    -- Set drive default, check drive default
+    passert_periphery_success("set drive default", function () gpio.drive = "default" end)
+    passert("drive is default", gpio.drive == "default")
+
+    -- Set inverted true, check inverted
+    passert_periphery_success("set inverted true", function () gpio.inverted = true end)
+    passert("inverted is true", gpio.inverted == true)
+    -- Set inverted false, check inverted
+    passert_periphery_success("set inverted false", function () gpio.inverted = false end)
+    passert("inverted is false", gpio.inverted == false)
+
     -- Attempt to set interrupt edge on output GPIO
     passert_periphery_error("set interrupt edge on output GPIO", function () gpio.edge = "rising" end, "GPIO_ERROR_INVALID_OPERATION")
     -- Attempt to read event on output GPIO
@@ -94,6 +116,22 @@ function test_open_config_close()
     -- Set edge none, check edge none
     passert_periphery_success("set edge none", function () gpio.edge = "none" end)
     passert("edge is none", gpio.edge == "none")
+
+    -- Set bias pull up, check bias pull up
+    passert_periphery_success("set bias pull-up", function () gpio.bias = "pull_up" end)
+    passert("bias is pull-up", gpio.bias == "pull_up")
+    -- Set bias pull down, check bias pull down
+    passert_periphery_success("set bias pull-down", function () gpio.bias = "pull_down" end)
+    passert("bias is pull-down", gpio.bias == "pull_down")
+    -- Set bias disable, check bias disable
+    passert_periphery_success("set bias disable", function () gpio.bias = "disable" end)
+    passert("bias is disable", gpio.bias == "disable")
+    -- Set bias default, check bias default
+    passert_periphery_success("set bias default", function () gpio.bias = "default" end)
+    passert("bias is default", gpio.bias == "default")
+
+    -- Attempt to set drive on input GPIO
+    passert_periphery_error("set drive on input GPIO", function () gpio.drive = "open_drain" end, "GPIO_ERROR_INVALID_OPERATION")
 
     -- Close gpio
     passert_periphery_success("close gpio", function () gpio:close() end)
@@ -199,6 +237,25 @@ function test_loopback()
     -- Check poll timeout
     local gpios_ready = GPIO.poll_multiple({gpio_in}, 1000)
     passert("poll_multiple timed out", #gpios_ready == 0)
+
+    passert_periphery_success("close gpio in", function () gpio_in:close() end)
+    passert_periphery_success("close gpio out", function () gpio_out:close() end)
+
+    -- Open both GPIOs as inputs
+    passert_periphery_success("open gpio in", function () gpio_in = GPIO(path, line_input, "in") end)
+    passert_periphery_success("open gpio out", function () gpio_out = GPIO(path, line_output, "in") end)
+
+    -- Set bias pull-up, check value is high
+    print("Check input GPIO reads high with pull-up bias")
+    passert_periphery_success("set bias pull-up", function () gpio_in.bias = "pull_up" end)
+    periphery.sleep_ms(1)
+    passert("value is high", gpio_in:read() == true)
+
+    -- Set bias pull-down, check value is low
+    print("Check input GPIO reads low with pull-down bias")
+    passert_periphery_success("set bias pull-down", function () gpio_in.bias = "pull_down" end)
+    periphery.sleep_ms(1)
+    passert("value is low", gpio_in:read() == false)
 
     passert_periphery_success("close gpio in", function () gpio_in:close() end)
     passert_periphery_success("close gpio out", function () gpio_out:close() end)

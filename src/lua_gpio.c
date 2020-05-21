@@ -41,15 +41,18 @@ gpio:read_event() --> {edge=<string>, timestamp=<number>}
 GPIO.poll_multiple(gpios <table>, [timeout_ms <number|nil>]) --> <table>
 
 -- Properties
-gpio.direction              mutable <string>
-gpio.edge                   mutable <string>
-gpio.line                   immutable <number>
-gpio.fd                     immutable <number>
-gpio.name                   immutable <number>
-gpio.label                  immutable <string>
-gpio.chip_fd                immutable <number>
-gpio.chip_name              immutable <number>
-gpio.chip_label             immutable <number>
+gpio.direction      mutable <string>
+gpio.edge           mutable <string>
+gpio.bias           mutable <string>
+gpio.drive          mutable <string>
+gpio.inverted       mutable <boolean>
+gpio.line           immutable <number>
+gpio.fd             immutable <number>
+gpio.name           immutable <string>
+gpio.label          immutable <string>
+gpio.chip_fd        immutable <number>
+gpio.chip_name      immutable <string>
+gpio.chip_label     immutable <string>
 */
 
 static const char *gpio_error_code_strings[] = {
@@ -476,6 +479,45 @@ static int lua_gpio_index(lua_State *L) {
             default: lua_pushstring(L, "unknown"); break;
         }
         return 1;
+    } else if (strcmp(field, "bias") == 0) {
+        gpio_bias_t bias;
+        int ret;
+
+        if ((ret = gpio_get_bias(gpio, &bias)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        switch (bias) {
+            case GPIO_BIAS_DEFAULT: lua_pushstring(L, "default"); break;
+            case GPIO_BIAS_PULL_UP: lua_pushstring(L, "pull_up"); break;
+            case GPIO_BIAS_PULL_DOWN: lua_pushstring(L, "pull_down"); break;
+            case GPIO_BIAS_DISABLE: lua_pushstring(L, "disable"); break;
+            default: lua_pushstring(L, "unknown"); break;
+        }
+        return 1;
+    } else if (strcmp(field, "drive") == 0) {
+        gpio_drive_t drive;
+        int ret;
+
+        if ((ret = gpio_get_drive(gpio, &drive)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        switch (drive) {
+            case GPIO_DRIVE_DEFAULT: lua_pushstring(L, "default"); break;
+            case GPIO_DRIVE_OPEN_DRAIN: lua_pushstring(L, "open_drain"); break;
+            case GPIO_DRIVE_OPEN_SOURCE: lua_pushstring(L, "open_source"); break;
+            default: lua_pushstring(L, "unknown"); break;
+        }
+        return 1;
+    } else if (strcmp(field, "inverted") == 0) {
+        bool inverted;
+        int ret;
+
+        if ((ret = gpio_get_inverted(gpio, &inverted)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushboolean(L, inverted);
+
+        return 1;
     }
 
     return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: unknown property");
@@ -549,6 +591,61 @@ static int lua_gpio_newindex(lua_State *L) {
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid edge, should be 'none', 'rising', 'falling', or 'both'");
 
         if ((ret = gpio_set_edge(gpio, edge)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        return 0;
+    } else if (strcmp(field, "bias") == 0) {
+        gpio_bias_t bias;
+        int ret;
+
+        const char *value;
+        lua_gpio_checktype(L, 3, LUA_TSTRING);
+        value = lua_tostring(L, 3);
+
+        if (strcmp(value, "default") == 0)
+            bias = GPIO_BIAS_DEFAULT;
+        else if (strcmp(value, "pull_up") == 0)
+            bias = GPIO_BIAS_PULL_UP;
+        else if (strcmp(value, "pull_down") == 0)
+            bias = GPIO_BIAS_PULL_DOWN;
+        else if (strcmp(value, "disable") == 0)
+            bias = GPIO_BIAS_DISABLE;
+        else
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid bias, should be 'default', 'pull_up', 'pull_down', or 'disable'");
+
+        if ((ret = gpio_set_bias(gpio, bias)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        return 0;
+    } else if (strcmp(field, "drive") == 0) {
+        gpio_drive_t drive;
+        int ret;
+
+        const char *value;
+        lua_gpio_checktype(L, 3, LUA_TSTRING);
+        value = lua_tostring(L, 3);
+
+        if (strcmp(value, "default") == 0)
+            drive = GPIO_DRIVE_DEFAULT;
+        else if (strcmp(value, "open_drain") == 0)
+            drive = GPIO_DRIVE_OPEN_DRAIN;
+        else if (strcmp(value, "open_source") == 0)
+            drive = GPIO_DRIVE_OPEN_SOURCE;
+        else
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid drive, should be 'default', 'open_drain', or 'open_source'");
+
+        if ((ret = gpio_set_drive(gpio, drive)) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        return 0;
+    } else if (strcmp(field, "inverted") == 0) {
+        bool inverted;
+        int ret;
+
+        lua_gpio_checktype(L, 3, LUA_TBOOLEAN);
+        inverted = lua_toboolean(L, 3);
+
+        if ((ret = gpio_set_inverted(gpio, inverted)) < 0)
             return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
 
         return 0;

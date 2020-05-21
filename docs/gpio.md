@@ -30,6 +30,9 @@ GPIO.poll_multiple(gpios <table>, [timeout_ms <number|nil>]) --> <table>
 -- Properties
 gpio.direction      mutable <string>
 gpio.edge           mutable <string>
+gpio.bias           mutable <string>
+gpio.drive          mutable <string>
+gpio.inverted       mutable <boolean>
 gpio.line           immutable <number>
 gpio.fd             immutable <number>
 gpio.name           immutable <string>
@@ -52,6 +55,17 @@ gpio.chip_label     immutable <string>
     * `"rising"` - Rising edge (0 -> 1 transition)
     * `"falling"` - Falling edge (1 -> 0 transition)
     * `"both"` - Both edges (X -> !X transition)
+
+* GPIO Bias
+    * `"default"` - Default line bias
+    * `"pull_up"` - Pull-up
+    * `"pull_down"` - Pull-up
+    * `"disable"` - Disable line bias
+
+* GPIO Drive
+    * `"default"` - Default line drive (push-pull)
+    * `"open_drain"` - Open drain
+    * `"open_source"` - Open source
 
 ### DESCRIPTION
 
@@ -174,6 +188,37 @@ Property gpio.edge          mutable <string>
 Get or set the GPIO's interrupt edge. Can be "none", "rising", "falling", or "both" (see [constants](#constants) above).
 
 Raises a [GPIO error](#errors) on assignment with an invalid edge.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.bias          mutable <string>
+```
+Get or set the GPIO's line bias. Can be "default", "pull_up", "pull_down", or "disable" (see [constants](#constants) above).
+
+This property is not supported by sysfs GPIOs.
+
+Raises a [GPIO error](#errors) on assignment with an invalid line bias or if unsupported by the GPIO type.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.drive         mutable <string>
+```
+Get or set the GPIO's line drive. Can be "default", "open_drain", or "open_source" (see [constants](#constants) above).
+
+This property is not supported by sysfs GPIOs.
+
+Raises a [GPIO error](#errors) on assignment with an invalid line drive or if unsupported by the GPIO type.
+
+--------------------------------------------------------------------------------
+
+``` lua
+Property gpio.inverted      mutable <boolean>
+```
+Get or set the GPIO's inverted (active low) property.
+
+Raises a [GPIO error](#errors) on failure.
 
 --------------------------------------------------------------------------------
 
