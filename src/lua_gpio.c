@@ -46,6 +46,7 @@ gpio.edge                   mutable <string>
 gpio.line                   immutable <number>
 gpio.fd                     immutable <number>
 gpio.name                   immutable <number>
+gpio.label                  immutable <string>
 gpio.chip_fd                immutable <number>
 gpio.chip_name              immutable <number>
 gpio.chip_label             immutable <number>
@@ -412,6 +413,15 @@ static int lua_gpio_index(lua_State *L) {
 
         lua_pushstring(L, name);
         return 1;
+    } else if (strcmp(field, "label") == 0) {
+        char label[32];
+        int ret;
+
+        if ((ret = gpio_label(gpio, label, sizeof(label))) < 0)
+            return lua_gpio_error(L, ret, gpio_errno(gpio), "Error: %s", gpio_errmsg(gpio));
+
+        lua_pushstring(L, label);
+        return 1;
     } else if (strcmp(field, "chip_fd") == 0) {
         int ret;
 
@@ -487,6 +497,8 @@ static int lua_gpio_newindex(lua_State *L) {
     else if (strcmp(field, "fd") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
     else if (strcmp(field, "name") == 0)
+        return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
+    else if (strcmp(field, "label") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");
     else if (strcmp(field, "chip_fd") == 0)
         return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: immutable property");

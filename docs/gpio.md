@@ -33,6 +33,7 @@ gpio.edge           mutable <string>
 gpio.line           immutable <number>
 gpio.fd             immutable <number>
 gpio.name           immutable <string>
+gpio.label          immutable <string>
 gpio.chip_fd        immutable <number>
 gpio.chip_name      immutable <string>
 gpio.chip_label     immutable <string>
@@ -198,6 +199,18 @@ Raises a [GPIO error](#errors) on assignment.
 Property gpio.name          immutable <string>
 ```
 Get the line name of the GPIO.
+
+This method is intended for use with character device GPIOs and always returns the empty string for sysfs GPIOs.
+
+Raises a [GPIO error](#errors) on assignment.
+
+--------------------------------------------------------------------------------
+
+
+``` lua
+Property gpio.label         immutable <string>
+```
+Get the line consumer label of the GPIO.
 
 This method is intended for use with character device GPIOs and always returns the empty string for sysfs GPIOs.
 

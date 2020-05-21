@@ -50,6 +50,9 @@ function test_open_config_close()
     passert("fd >= 0", gpio.fd >= 0)
     passert("chip_fd >= 0", gpio.chip_fd >= 0)
 
+    -- Check default label
+    passert("property label", gpio.label == "periphery")
+
     -- Set invalid direction
     passert_periphery_error("set invalid direction", function () gpio.direction = "blah" end, "GPIO_ERROR_ARG")
     -- Set invalid edge
