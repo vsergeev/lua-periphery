@@ -10,7 +10,8 @@ local GPIO = periphery.GPIO
 
 -- Constructor (for character device GPIO)
 gpio = GPIO(path <string>, line <number|string>, direction <string>)
-gpio = GPIO{path=<string>, line=<number|string>, direction=<string>}
+gpio = GPIO{path=<string>, line=<number|string>, direction=<string>,
+            edge="none", bias="default", drive="default", inverted=false, label=nil}
 -- Constructor (for sysfs GPIO)
 gpio = GPIO(line <number>, direction <string>)
 gpio = GPIO{line=<number>, direction=<string>}
@@ -73,16 +74,22 @@ gpio.chip_label     immutable <string>
 
 ``` lua
 GPIO(path <string>, line <number|string>, direction <string>) --> <GPIO object>
-GPIO{path=<string>, line=<number|string>, direction=<string>} --> <GPIO object>
+GPIO{path=<string>, line=<number|string>, direction=<string>,
+     edge="none", bias="default", drive="default", inverted=false, label=nil} --> <GPIO object>
 ```
 
-Instantiate a GPIO object and open the character device GPIO with the specified line and direction at the specified GPIO chip path (e.g. `/dev/gpiochip0`). Line can be number or by string name. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
+Instantiate a GPIO object and open the character device GPIO with the specified line and direction at the specified GPIO chip path (e.g. `/dev/gpiochip0`). Default properties can be overridden with the table constructor. Line can be a number or string name. Direction can be "in", "out", "low", "high" (see [constants](#constants) above).
+
+Interrupt edge can be "none", "rising", "falling", or "both" (see [constants](#constants) above). Line bias can be "default", "pull_up", "pull_down", or "disable" (see [constants](#constants) above). Line drive can be "default", "open_drain", or "open_source" (see [constants](#constants) above). Inverted (active low) can be true or false. Label can be a string or nil for the default consumer label.
 
 Example:
 ``` lua
 -- Open GPIO 23 with output direction
 gpio = GPIO(23, "out")
 gpio = GPIO{line=23, direction="out"}
+
+-- Open GPIO 24 with input direction, pull-up line bias, and custom label
+gpio = GPIO{line=24, direction="in", bias="pull_up", label="foobar"}
 ```
 
 Returns a new GPIO object on success. Raises a [GPIO error](#errors) on failure.

@@ -144,6 +144,19 @@ function test_open_config_close()
     passert("chip_fd >= 0", gpio.chip_fd >= 0)
     passert_periphery_success("set direction out", function () gpio.direction = "out" end)
     passert_periphery_success("close gpio", function () gpio:close() end)
+
+    -- Open with all table arguments
+    passert_periphery_success("real GPIO", function () gpio = GPIO{path=path, line=line_input, direction="in", edge="rising", bias="default", drive="default", inverted=false, label="test123"} end)
+    passert("property line", gpio.line == line_input)
+    passert("direction is in", gpio.direction == "in")
+    passert("fd >= 0", gpio.fd >= 0)
+    passert("chip_fd >= 0", gpio.chip_fd >= 0)
+    passert("edge is rising", gpio.edge == "rising")
+    passert("bias is default", gpio.bias == "default")
+    passert("drive is default", gpio.drive == "default")
+    passert("inverted is false", gpio.inverted == false)
+    passert("label is test123", gpio.label == "test123")
+    passert_periphery_success("close gpio", function () gpio:close() end)
 end
 
 function test_loopback()

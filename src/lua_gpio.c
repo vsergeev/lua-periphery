@@ -23,7 +23,7 @@ local GPIO = periphery.GPIO
 
 -- Constructor (for character device GPIO)
 gpio = GPIO(path <string>, line <number>, direction <string>)
-gpio = GPIO{path=<string>, line=<number>, direction=<string>}
+gpio = GPIO{path=<string>, line=<number|string>, direction=<string>, edge="none", bias="default", drive="default", inverted=false, label=nil}
 -- Constructor (for sysfs GPIO)
 gpio = GPIO(line <number>, direction <string>)
 gpio = GPIO{line=<number>, direction=<string>}
@@ -109,6 +109,12 @@ static int lua_gpio_open(lua_State *L) {
     const char *str_direction;
     int ret;
 
+    gpio_edge_t edge = GPIO_EDGE_NONE;
+    gpio_bias_t bias = GPIO_BIAS_DEFAULT;
+    gpio_drive_t drive = GPIO_DRIVE_DEFAULT;
+    bool inverted = false;
+    const char *label = NULL;
+
     gpio = *((gpio_t **)luaL_checkudata(L, 1, "periphery.GPIO"));
 
     if (lua_istable(L, 2)) {
@@ -134,6 +140,69 @@ static int lua_gpio_open(lua_State *L) {
         if (lua_type(L, -1) != LUA_TSTRING)
             return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type of table argument 'direction', should be string");
         str_direction = lua_tostring(L, -1);
+
+        /* Optional edge */
+        lua_getfield(L, 2, "edge");
+        if (lua_isstring(L, -1)) {
+            const char *value = lua_tostring(L, -1);
+            if (strcmp(value, "none") == 0)
+                edge = GPIO_EDGE_NONE;
+            else if (strcmp(value, "rising") == 0)
+                edge = GPIO_EDGE_RISING;
+            else if (strcmp(value, "falling") == 0)
+                edge = GPIO_EDGE_FALLING;
+            else if (strcmp(value, "both") == 0)
+                edge = GPIO_EDGE_BOTH;
+            else
+                return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid table argument 'edge', should be 'none', 'rising', 'falling', or 'both'");
+        } else if (!lua_isnil(L, -1))
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type on table argument 'edge', should be string");
+
+        /* Optional bias */
+        lua_getfield(L, 2, "bias");
+        if (lua_isstring(L, -1)) {
+            const char *value = lua_tostring(L, -1);
+            if (strcmp(value, "default") == 0)
+                bias = GPIO_BIAS_DEFAULT;
+            else if (strcmp(value, "pull_up") == 0)
+                bias = GPIO_BIAS_PULL_UP;
+            else if (strcmp(value, "pull_down") == 0)
+                bias = GPIO_BIAS_PULL_DOWN;
+            else if (strcmp(value, "disable") == 0)
+                bias = GPIO_BIAS_DISABLE;
+            else
+                return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid table argument 'bias', should be 'default', 'pull_up', 'pull_down', or 'disable'");
+        } else if (!lua_isnil(L, -1))
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type on table argument 'bias', should be string");
+
+        /* Optional drive */
+        lua_getfield(L, 2, "drive");
+        if (lua_isstring(L, -1)) {
+            const char *value = lua_tostring(L, -1);
+            if (strcmp(value, "default") == 0)
+                drive = GPIO_DRIVE_DEFAULT;
+            else if (strcmp(value, "open_drain") == 0)
+                drive = GPIO_DRIVE_OPEN_DRAIN;
+            else if (strcmp(value, "open_source") == 0)
+                drive = GPIO_DRIVE_OPEN_SOURCE;
+            else
+                return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid table argument 'drive', should be 'default', 'open_drain', or 'open_source'");
+        } else if (!lua_isnil(L, -1))
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type on table argument 'drive', should be string");
+
+        /* Optional inverted */
+        lua_getfield(L, 2, "inverted");
+        if (lua_isboolean(L, -1)) {
+            inverted = lua_toboolean(L, -1);
+        } else if (!lua_isnil(L, -1))
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type on table argument 'inverted', should be boolean");
+
+        /* Optional label */
+        lua_getfield(L, 2, "label");
+        if (lua_isstring(L, -1)) {
+            label = lua_tostring(L, -1);
+        } else if (!lua_isnil(L, -1))
+            return lua_gpio_error(L, GPIO_ERROR_ARG, 0, "Error: invalid type on table argument 'label', should be string");
     } else if (lua_gettop(L) > 3) {
         /* Arguments passed on stack: path (string), line (number|string), direction (string) */
 
@@ -172,11 +241,27 @@ static int lua_gpio_open(lua_State *L) {
 
     if (path && line_name) {
         /* character device gpio */
-        if ((ret = gpio_open_name(gpio, path, line_name, direction)) < 0)
+        gpio_config_t config = {
+            .direction = direction,
+            .edge = edge,
+            .bias = bias,
+            .drive = drive,
+            .inverted = inverted,
+            .label = label,
+        };
+        if ((ret = gpio_open_name_advanced(gpio, path, line_name, &config)) < 0)
             return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
     } else if (path) {
         /* character device gpio */
-        if ((ret = gpio_open(gpio, path, line, direction)) < 0)
+        gpio_config_t config = {
+            .direction = direction,
+            .edge = edge,
+            .bias = bias,
+            .drive = drive,
+            .inverted = inverted,
+            .label = label,
+        };
+        if ((ret = gpio_open_advanced(gpio, path, line, &config)) < 0)
             return lua_gpio_error(L, ret, gpio_errno(gpio), gpio_errmsg(gpio));
     } else {
         /* sysfs gpio */
