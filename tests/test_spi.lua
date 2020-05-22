@@ -33,7 +33,7 @@ function test_open_config_close()
     -- Normal open
     passert_periphery_success("spi open", function () spi = SPI(device, 1, 100000) end)
 
-    -- Confirm fd, bit_order="msb", bits_per_word=8, extra_flags = 0 */
+    -- Confirm fd, bit_order="msb", bits_per_word=8, extra_flags = 0
     passert("fd > 0", spi.fd > 0)
     passert("mode is 1", spi.mode == 1)
     passert("max speed is 100000", spi.max_speed == 100000)
