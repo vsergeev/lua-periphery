@@ -6,6 +6,8 @@ lua-periphery is a library for GPIO, LED, PWM, SPI, I2C, MMIO, and Serial periph
 
 Using Python or C? Check out the [python-periphery](https://github.com/vsergeev/python-periphery) and [c-periphery](https://github.com/vsergeev/c-periphery) projects.
 
+Contributed libraries: [java-periphery](https://github.com/sgjava/java-periphery)
+
 ## Examples
 
 ### GPIO
