@@ -404,7 +404,7 @@ static int lua_gpio_index(lua_State *L) {
         lua_pushinteger(L, gpio_fd(gpio));
         return 1;
     } else if (strcmp(field, "name") == 0) {
-        char name[64];
+        char name[32];
         int ret;
 
         if ((ret = gpio_name(gpio, name, sizeof(name))) < 0)
@@ -421,7 +421,7 @@ static int lua_gpio_index(lua_State *L) {
         lua_pushinteger(L, ret);
         return 1;
     } else if (strcmp(field, "chip_name") == 0) {
-        char chip_name[64];
+        char chip_name[32];
         int ret;
 
         if ((ret = gpio_chip_name(gpio, chip_name, sizeof(chip_name))) < 0)
@@ -430,7 +430,7 @@ static int lua_gpio_index(lua_State *L) {
         lua_pushstring(L, chip_name);
         return 1;
     } else if (strcmp(field, "chip_label") == 0) {
-        char chip_label[64];
+        char chip_label[32];
         int ret;
 
         if ((ret = gpio_chip_label(gpio, chip_label, sizeof(chip_label))) < 0)
