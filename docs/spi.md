@@ -10,7 +10,8 @@ local SPI = periphery.SPI
 
 -- Constructor
 spi = SPI(device <path string>, mode <number>, max_speed <number>)
-spi = SPI{device=<path string>, mode=<number>, max_speed=<number>, bit_order="msb", bits_per_word=8, extra_flags=0}
+spi = SPI{device=<path string>, mode=<number>, max_speed=<number>,
+          bit_order="msb", bits_per_word=8, extra_flags=0}
 
 -- Methods
 spi:transfer(data <table>) --> <table>
@@ -35,7 +36,8 @@ spi.extra_flags     mutable <number>
 
 ``` lua
 SPI(device <path string>, mode <number>, max_speed <number>) --> <SPI object>
-SPI{device=<path string>, mode=<number>, max_speed=<number>, bit_order="msb", bits_per_word=8, extra_flags=0} --> <SPI object>
+SPI{device=<path string>, mode=<number>, max_speed=<number>,
+    bit_order="msb", bits_per_word=8, extra_flags=0} --> <SPI object>
 ```
 Instantiate a SPI object and open the `spidev` device at the specified path with the specified SPI mode, specified max speed in hertz, and the defaults of "msb" bit order and 8 bits per word. SPI mode can be 0, 1, 2, or 3. Defaults may be overridden with the table constructor. Bit order can be "msb" or "lsb" (see [constants](#constants) above). Extra flags passed in the `extra_flags` argument will be bitwise-ORed with the SPI mode.
 
@@ -43,7 +45,8 @@ Example:
 ```
 spi = SPI("/dev/spidev1.0", 0, 1e6)
 spi = SPI{device="/dev/spidev1.0", mode=0, max_speed=1e6}
-spi = SPI{device="/dev/spidev1.0", mode=0, max_speed=1e6, bit_order="lsb", bits_per_word=7, extra_flags=0}
+spi = SPI{device="/dev/spidev1.0", mode=0, max_speed=1e6,
+          bit_order="lsb", bits_per_word=7, extra_flags=0}
 ```
 
 Returns a new SPI object on success. Raises a [SPI error](#errors) on failure.
