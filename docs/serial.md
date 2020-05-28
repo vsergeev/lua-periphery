@@ -10,7 +10,8 @@ local Serial = periphery.Serial
 
 -- Constructor
 serial = Serial(device <path string>, baudrate <number>)
-serial = Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false}
+serial = Serial{device=<path string>, baudrate=<number>, databits=8,
+                parity="none", stopbits=1, xonxoff=false, rtscts=false}
 
 -- Methods
 serial:read(length <number>, [timeout <number>]) --> <string>
@@ -43,7 +44,8 @@ serial.fd           immutable <number>
 
 ``` lua
 Serial(device <path string>, baudrate <number>) --> <Serial object>
-Serial{device=<path string>, baudrate=<number>, databits=8, parity="none", stopbits=1, xonxoff=false, rtscts=false} --> <Serial object>
+Serial{device=<path string>, baudrate=<number>, databits=8,
+       parity="none", stopbits=1, xonxoff=false, rtscts=false} --> <Serial object>
 ```
 
 Instantiate a serial object and open the `tty` device at the specified path with the specified baudrate, and the defaults of 8 data bits, no parity, 1 stop bit, no software flow control (xonxoff), and no hardware flow control (rtscts). Defaults may be overridden with the table constructor. Parity can be "none", "odd", "even" (see [constants](#constants) above).
