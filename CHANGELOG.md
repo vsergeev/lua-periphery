@@ -1,3 +1,24 @@
+* v2.2.0 - 05/29/2020
+    * Bump c-periphery dependency version to v2.2.0 for new GPIO and Serial
+      module APIs, fixes, and improvements.
+    * GPIO
+        * Make `timeout_ms` argument optional for `poll()` and default to
+          blocking poll.
+        * Add `poll_multiple()` static method.
+        * Add line consumer `label` property.
+        * Add line `bias`, line `drive`, and `inverted` properties.
+        * Add additional properties to table constructor for character device
+          GPIOs.
+        * Improve wording in documentation.
+    * Serial
+        * Make `timeout_ms` argument optional for `poll()` and default to
+          blocking poll.
+        * Add `vmin` and `vtime` properties for the corresponding termios
+          settings.
+        * Add description of termios timeout behavior with `read()` to
+          documentation.
+        * Improve wording and fix typos in documentation.
+
 * v2.1.0 - 01/07/2020
     * Bump c-periphery dependency version to v2.1.0 for new LED and PWM
       modules.
