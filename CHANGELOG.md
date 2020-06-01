@@ -1,3 +1,7 @@
+* v2.2.1 - 05/31/2020
+    * Bump c-periphery dependency version to v2.2.1 for build fix with uClibc
+      and argument name fix in GPIO module.
+
 * v2.2.0 - 05/29/2020
     * Bump c-periphery dependency version to v2.2.0 for new GPIO and Serial
       module APIs, fixes, and improvements.
