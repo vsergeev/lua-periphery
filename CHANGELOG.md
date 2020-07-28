@@ -1,3 +1,8 @@
+* v2.2.2 - 07/28/2020
+    * Bump c-periphery dependency version to v2.2.2 for conditional compilation
+      of character device GPIO support to allow build under older Linux kernel
+      headers, and to fix missing definition warnings.
+
 * v2.2.1 - 05/31/2020
     * Bump c-periphery dependency version to v2.2.1 for build fix with uClibc
       and argument name fix in GPIO module.
