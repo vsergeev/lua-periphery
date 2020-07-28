@@ -2,6 +2,8 @@
 
 GPIO module for Linux userspace character device and sysfs GPIOs.
 
+Character device GPIOs were introduced in Linux kernel version 4.8. If lua-periphery is built with Linux kernel headers older than version 4.8 (i.e. `<linux/gpio.h>` is missing), then only legacy sysfs GPIOs will be supported.
+
 ### SYNOPSIS
 
 ``` lua
