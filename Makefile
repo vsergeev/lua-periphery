@@ -4,6 +4,8 @@ SRCS = src/lua_periphery.c src/lua_mmio.c src/lua_gpio.c src/lua_led.c src/lua_p
 C_PERIPHERY = c-periphery
 C_PERIPHERY_LIB = $(C_PERIPHERY)/periphery.a
 
+C_PERIPHERY_GPIO_CDEV_SUPPORT := $(shell ! echo "\#include <linux/gpio.h>" | $(CC) -E - >/dev/null 2>&1; echo $$?)
+
 ifndef LUA
 LUA = lua
 endif
@@ -48,5 +50,4 @@ $(LIB): $(C_PERIPHERY_LIB) $(SRCS)
 	$(CC) $(MOD_CFLAGS) $(MOD_LDFLAGS) $(SRCS) $(C_PERIPHERY_LIB) -o $@
 
 $(C_PERIPHERY_LIB): $(C_PERIPHERY)/Makefile
-	cd $(C_PERIPHERY); $(MAKE)
-
+	cd $(C_PERIPHERY); PERIPHERY_GPIO_CDEV_SUPPORT=$(C_PERIPHERY_GPIO_CDEV_SUPPORT) $(MAKE)
