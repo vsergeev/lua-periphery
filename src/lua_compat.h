@@ -7,7 +7,7 @@
 #define luaL_checkunsigned(L, narg) (luaL_checknumber(L, narg))
 #define luaL_len(L, idx) (lua_objlen(L, idx))
 #elif LUA_VERSION_NUM == 502
-#elif LUA_VERSION_NUM == 503
+#elif LUA_VERSION_NUM >= 503
 #define lua_tounsigned(L, idx) (lua_tointeger(L, idx))
 #define lua_pushunsigned(L, val) (lua_pushinteger(L, (lua_Integer)val))
 #define luaL_checkunsigned(L, narg) (luaL_checkinteger(L, narg))
