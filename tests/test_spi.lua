@@ -39,7 +39,6 @@ function test_open_config_close()
     passert("max speed is 100000", spi.max_speed == 100000)
     passert("default bit_order is msb", spi.bit_order == "msb")
     passert("default bits_per_word is 8", spi.bits_per_word == 8)
-    passert("default extra_flags is 0", spi.extra_flags == 0)
     io.write(string.format("spi: %s\n", spi:__tostring()))
 
     -- Not going to try different bit order or bits per word, because not all
@@ -72,7 +71,6 @@ function test_open_config_close()
     passert("max speed is 500000", spi.max_speed == 500000)
     passert("bit_order is msb", spi.bit_order == "msb")
     passert("bits_per_word is 8", spi.bits_per_word == 8)
-    passert("extra_flags is 0", spi.extra_flags == 0)
     passert_periphery_success("spi close", function () spi:close() end)
 end
 
