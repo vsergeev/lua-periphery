@@ -1,3 +1,8 @@
+* v2.2.5 - 11/19/2020
+    * Bump c-periphery dependency version to v2.2.5 for additional direction
+      checks in GPIO module, improved string handling in LED and GPIO modules,
+      and default optimization added to CFLAGS in Makefile.
+
 * v2.2.4 - 09/11/2020
     * Bump c-periphery dependency version to v2.2.3 for build fix of GPIO under
       older Linux kernel headers missing line event support in the gpio-cdev
