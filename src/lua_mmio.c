@@ -23,7 +23,7 @@ local MMIO = periphery.MMIO
 
 -- Constructor
 mmio = MMIO(address <number>, size <number>)
-mmio = MMIO{address=<number>, size=<number>}
+mmio = MMIO{address=<number>, size=<number>, path="/dev/mem"}
 
 -- Methods
 mmio:read32(offset <number>) --> <number>
@@ -90,22 +90,32 @@ static int lua_mmio_open(lua_State *L) {
     size_t size;
     int ret;
 
+    const char *path = "/dev/mem";
+
     mmio = *((mmio_t **)luaL_checkudata(L, 1, "periphery.MMIO"));
 
-    /* Arguments passed in table form */
     if (lua_istable(L, 2)) {
+        /* Arguments passed in table form */
+
         lua_getfield(L, 2, "base");
         if (!lua_isnumber(L, -1))
             return lua_mmio_error(L, MMIO_ERROR_ARG, 0, "Error: invalid type of table argument 'base', should be number");
+        base = lua_tounsigned(L, -2);
+
         lua_getfield(L, 2, "size");
         if (!lua_isnumber(L, -1))
             return lua_mmio_error(L, MMIO_ERROR_ARG, 0, "Error: invalid type of table argument 'size', should be number");
-
-        base = lua_tounsigned(L, -2);
         size = lua_tounsigned(L, -1);
 
-    /* Arguments passed normally */
+        /* Optional label */
+        lua_getfield(L, 2, "path");
+        if (lua_isstring(L, -1))
+            path = lua_tostring(L, -1);
+        else if (!lua_isnil(L, -1))
+            return lua_mmio_error(L, MMIO_ERROR_ARG, 0, "Error: invalid type on table argument 'path', should be string");
     } else {
+        /* Arguments passed on stack */
+
         lua_mmio_checktype(L, 2, LUA_TNUMBER);
         lua_mmio_checktype(L, 3, LUA_TNUMBER);
 
@@ -113,7 +123,7 @@ static int lua_mmio_open(lua_State *L) {
         size = lua_tounsigned(L, 3);
     }
 
-    if ((ret = mmio_open(mmio, base, size)) < 0)
+    if ((ret = mmio_open_advanced(mmio, base, size, path)) < 0)
         return lua_mmio_error(L, ret, mmio_errno(mmio), mmio_errmsg(mmio));
 
     return 0;

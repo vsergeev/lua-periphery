@@ -10,7 +10,7 @@ local MMIO = periphery.MMIO
 
 -- Constructor
 mmio = MMIO(address <number>, size <number>)
-mmio = MMIO{address=<number>, size=<number>}
+mmio = MMIO{address=<number>, size=<number>, path="/dev/mem"}
 
 -- Methods
 mmio:read32(offset <number>) --> <number>
@@ -32,14 +32,14 @@ mmio.size       immutable <number>
 
 ``` lua
 MMIO(address <number>, size <number>) --> <MMIO Object>
-MMIO{address=<number>, size=<number>} --> <MMIO Object>
+MMIO{address=<number>, size=<number>, path="/dev/mem"} --> <MMIO Object>
 ```
-Instantiate an MMIO object and map in the region of physical memory specified by the `address` base physical address and `size` size in bytes.
+Instantiate an MMIO object and map in the region of physical memory specified by the `address` base physical address and `size` size in bytes. The default memory character device `/dev/mem` can be overridden with the table constructor, for use with sandboxed memory character devices, e.g. `/dev/gpiomem`.
 
 Example:
 ``` lua
 mmio = MMIO(0x40000000, 4096)
-mmio = MMIO{address=0x40001000, 0x1000}
+mmio = MMIO{address=0x40001000, size=0x1000, path="/dev/gpiomem"}
 ```
 
 Returns a new MMIO object on success. Raises an [MMIO error](#errors) on failure.
