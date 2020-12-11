@@ -201,6 +201,7 @@ false
 | `"SERIAL_ERROR_CONFIGURE"`    | Configuring serial port attributes    |
 | `"SERIAL_ERROR_IO"`           | Reading/writing serial port           |
 | `"SERIAL_ERROR_CLOSE"`        | Closing serial port                   |
+| `"SERIAL_ERROR_ALLOC"`        | Allocating memory                     |
 
 ### EXAMPLE
 
