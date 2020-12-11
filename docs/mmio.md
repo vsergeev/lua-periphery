@@ -146,6 +146,7 @@ false
 | `"MMIO_ERROR_ARG"`    | Invalid arguments     |
 | `"MMIO_ERROR_OPEN"`   | Opening MMIO          |
 | `"MMIO_ERROR_CLOSE"`  | Closing MMIO          |
+| `"MMIO_ERROR_ALLOC"`  | Allocating memory     |
 
 ### EXAMPLE
 
