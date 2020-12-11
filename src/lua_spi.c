@@ -92,7 +92,7 @@ static int lua_spi_open(lua_State *L) {
     uint32_t max_speed;
     spi_bit_order_t bit_order;
     uint8_t bits_per_word;
-    uint8_t extra_flags;
+    uint32_t extra_flags;
     int ret;
 
     spi = *((spi_t **)luaL_checkudata(L, 1, "periphery.SPI"));
@@ -158,7 +158,7 @@ static int lua_spi_open(lua_State *L) {
         max_speed = lua_tounsigned(L, 4);
     }
 
-    if ((ret = spi_open_advanced(spi, device, mode, max_speed, bit_order, bits_per_word, extra_flags)) < 0)
+    if ((ret = spi_open_advanced2(spi, device, mode, max_speed, bit_order, bits_per_word, extra_flags)) < 0)
         return lua_spi_error(L, ret, spi_errno(spi), spi_errmsg(spi));
 
     return 0;
