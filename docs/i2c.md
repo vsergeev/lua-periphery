@@ -126,6 +126,7 @@ false
 | `"I2C_ERROR_NOT_SUPPORTED"`   | I2C not supported on this device  |
 | `"I2C_ERROR_TRANSFER"`        | I2C transfer                      |
 | `"I2C_ERROR_CLOSE"`           | Closing I2C device                |
+| `"I2C_ERROR_ALLOC"`           | Allocating memory                 |
 
 ### EXAMPLE
 
