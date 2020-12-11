@@ -39,16 +39,17 @@ spi.extra_flags     mutable <number>
 */
 
 /* Define a new error for malloc() required in read/write */
-#define SPI_ERROR_ALLOC    (SPI_ERROR_CLOSE-1)
+#define SPI_ERROR_ALLOC    (SPI_ERROR_UNSUPPORTED-1)
 
 static const char *spi_error_code_strings[] = {
-    [-SPI_ERROR_ARG]        = "SPI_ERROR_ARG",
-    [-SPI_ERROR_OPEN]       = "SPI_ERROR_OPEN",
-    [-SPI_ERROR_QUERY]      = "SPI_ERROR_QUERY",
-    [-SPI_ERROR_CONFIGURE]  = "SPI_ERROR_CONFIGURE",
-    [-SPI_ERROR_TRANSFER]   = "SPI_ERROR_TRANSFER",
-    [-SPI_ERROR_CLOSE]      = "SPI_ERROR_CLOSE",
-    [-SPI_ERROR_ALLOC]      = "SPI_ERROR_ALLOC",
+    [-SPI_ERROR_ARG]            = "SPI_ERROR_ARG",
+    [-SPI_ERROR_OPEN]           = "SPI_ERROR_OPEN",
+    [-SPI_ERROR_QUERY]          = "SPI_ERROR_QUERY",
+    [-SPI_ERROR_CONFIGURE]      = "SPI_ERROR_CONFIGURE",
+    [-SPI_ERROR_TRANSFER]       = "SPI_ERROR_TRANSFER",
+    [-SPI_ERROR_CLOSE]          = "SPI_ERROR_CLOSE",
+    [-SPI_ERROR_UNSUPPORTED]    = "SPI_ERROR_UNSUPPORTED",
+    [-SPI_ERROR_ALLOC]          = "SPI_ERROR_ALLOC",
 };
 
 static int lua_spi_error(lua_State *L, enum spi_error_code code, int c_errno, const char *fmt, ...) {
@@ -327,13 +328,22 @@ static int lua_spi_index(lua_State *L) {
         lua_pushunsigned(L, bits_per_word);
         return 1;
     } else if (strcmp(field, "extra_flags") == 0) {
-        uint8_t extra_flags;
+        uint32_t extra_flags32;
         int ret;
 
-        if ((ret = spi_get_extra_flags(spi, &extra_flags)) < 0)
-            return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+        /* Attempt getting 32-bit extra flags */
+        if ((ret = spi_get_extra_flags32(spi, &extra_flags32)) < 0) {
+            /* Fallback to getting 8-bit extra flags */
+            uint8_t extra_flags8;
 
-        lua_pushunsigned(L, extra_flags);
+            if ((ret = spi_get_extra_flags(spi, &extra_flags8)) < 0)
+                return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+
+            lua_pushunsigned(L, extra_flags8);
+            return 1;
+        }
+
+        lua_pushunsigned(L, extra_flags32);
         return 1;
     }
 
@@ -406,14 +416,19 @@ static int lua_spi_newindex(lua_State *L) {
 
         return 0;
     } else if (strcmp(field, "extra_flags") == 0) {
-        uint8_t extra_flags;
+        uint32_t extra_flags;
         int ret;
 
         lua_spi_checktype(L, 3, LUA_TNUMBER);
         extra_flags = lua_tounsigned(L, 3);
 
-        if ((ret = spi_set_extra_flags(spi, extra_flags)) < 0)
-            return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+        if (extra_flags > 0xff) {
+            if ((ret = spi_set_extra_flags32(spi, extra_flags)) < 0)
+                return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+        } else {
+            if ((ret = spi_set_extra_flags(spi, (uint8_t)extra_flags)) < 0)
+                return lua_spi_error(L, ret, spi_errno(spi), "Error: %s", spi_errmsg(spi));
+        }
 
         return 0;
     }
