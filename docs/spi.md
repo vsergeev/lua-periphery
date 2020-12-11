@@ -123,14 +123,16 @@ false
 > 
 ```
 
-| Error Code                | Description                       |
-|---------------------------|-----------------------------------|
-| `"SPI_ERROR_ARG"`         | Invalid arguments                 |
-| `"SPI_ERROR_OPEN"`        | Opening SPI device                |
-| `"SPI_ERROR_QUERY"`       | Querying SPI device attributes    |
-| `"SPI_ERROR_CONFIGURE"`   | Configuring SPI device attributes |
-| `"SPI_ERROR_TRANSFER"`    | SPI transfer                      |
-| `"SPI_ERROR_CLOSE"`       | Closing SPI device                |
+| Error Code                | Description                        |
+|---------------------------|------------------------------------|
+| `"SPI_ERROR_ARG"`         | Invalid arguments                  |
+| `"SPI_ERROR_OPEN"`        | Opening SPI device                 |
+| `"SPI_ERROR_QUERY"`       | Querying SPI device attributes     |
+| `"SPI_ERROR_CONFIGURE"`   | Configuring SPI device attributes  |
+| `"SPI_ERROR_TRANSFER"`    | SPI transfer                       |
+| `"SPI_ERROR_CLOSE"`       | Closing SPI device                 |
+| `"SPI_ERROR_UNSUPPORTED"` | Unsupported attribute or operation |
+| `"SPI_ERROR_ALLOC"`       | Allocating memory                  |
 
 ### EXAMPLE
 
