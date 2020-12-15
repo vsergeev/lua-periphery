@@ -1,3 +1,16 @@
+* v2.3.0 - 12/16/2020
+    * Bump c-periphery dependency version to v2.3.0 for new advanced open
+      function in MMIO module, for 32-bit extra flags support in SPI module,
+      and minor build improvements.
+    * MMIO
+        * Add `path` property to table constructor for use with alternate
+          memory character devices (e.g. `/dev/gpiomem`).
+    * SPI
+        * Add support for 32-bit flags to `extra_flags` property and table
+          constructor.
+    * Update missing error codes in documentation for I2C, MMIO, Serial, and
+      SPI modules.
+
 * v2.2.5 - 11/19/2020
     * Bump c-periphery dependency version to v2.2.5 for additional direction
       checks in GPIO module, improved string handling in LED and GPIO modules,
