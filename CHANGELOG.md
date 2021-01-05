@@ -1,3 +1,7 @@
+* v2.3.1 - 01/05/2021
+    * Bump c-periphery dependency version to v2.3.1 for build fix of SPI under
+      Linux kernel headers without 32-bit SPI mode flags support.
+
 * v2.3.0 - 12/16/2020
     * Bump c-periphery dependency version to v2.3.0 for new advanced open
       function in MMIO module, for 32-bit extra flags support in SPI module,
