@@ -1,4 +1,4 @@
-# lua-periphery [![Build Status](https://travis-ci.org/vsergeev/lua-periphery.svg?branch=master)](https://travis-ci.org/vsergeev/lua-periphery) [![GitHub release](https://img.shields.io/github/release/vsergeev/lua-periphery.svg?maxAge=7200)](https://github.com/vsergeev/lua-periphery) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vsergeev/lua-periphery/blob/master/LICENSE)
+# lua-periphery [![Build Status](https://travis-ci.com/vsergeev/lua-periphery.svg?branch=master)](https://travis-ci.com/vsergeev/lua-periphery) [![GitHub release](https://img.shields.io/github/release/vsergeev/lua-periphery.svg?maxAge=7200)](https://github.com/vsergeev/lua-periphery) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/vsergeev/lua-periphery/blob/master/LICENSE)
 
 ## Linux Peripheral I/O (GPIO, LED, PWM, SPI, I2C, MMIO, Serial) with Lua
 
