@@ -1,3 +1,7 @@
+* v2.4.0 - 03/31/2023
+    * Bump c-periphery dependency version to v2.4.0 for gpio-cdev v2 ABI
+      support in character device GPIOs.
+
 * v2.3.1 - 01/05/2021
     * Bump c-periphery dependency version to v2.3.1 for build fix of SPI under
       Linux kernel headers without 32-bit SPI mode flags support.
