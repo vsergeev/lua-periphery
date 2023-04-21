@@ -1,3 +1,7 @@
+* v2.4.1 - 04/21/2023
+    * Bump c-periphery dependency version to v2.4.1 for fix of realtime
+      timestamp reporting for line events in gpio-cdev v2 implementation.
+
 * v2.4.0 - 03/31/2023
     * Bump c-periphery dependency version to v2.4.0 for gpio-cdev v2 ABI
       support in character device GPIOs.
