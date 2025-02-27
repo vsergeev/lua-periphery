@@ -15,15 +15,15 @@ jobs:
           - lua-version: "luajit"
             lua-incdir: "./.lua/include/luajit-2.1"
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Set up Lua ${{ matrix.lua-version }}
-      uses: leafo/gh-actions-lua@v10
+      uses: leafo/gh-actions-lua@v11
       with:
         luaVersion: ${{ matrix.lua-version }}
 
