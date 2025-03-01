@@ -34,7 +34,7 @@ all: $(LIB)
 
 .PHONY: clean
 clean:
-	cd $(C_PERIPHERY) && $(MAKE) clean
+	$(MAKE) -C $(C_PERIPHERY) clean
 	rm -rf $(LIB)
 
 .PHONY: install
@@ -48,4 +48,4 @@ $(LIB): $(C_PERIPHERY_LIB) $(SRCS)
 	$(CC) $(MOD_CFLAGS) $(MOD_LDFLAGS) $(SRCS) $(C_PERIPHERY_LIB) -o $@
 
 $(C_PERIPHERY_LIB): $(C_PERIPHERY)/Makefile
-	cd $(C_PERIPHERY); $(MAKE)
+	$(MAKE) -C $(C_PERIPHERY)
