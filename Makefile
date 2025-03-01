@@ -14,6 +14,8 @@ else
 LUA_CFLAGS = -I$(LUA_INCDIR)
 endif
 
+LUA_LIBDIR ?= $(shell pkg-config --variable=INSTALL_CMOD $(LUA))
+
 ###########################################################################
 
 MOD_CFLAGS = $(CFLAGS)
