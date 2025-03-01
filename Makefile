@@ -39,8 +39,7 @@ clean:
 
 .PHONY: install
 install:
-	mkdir -p $(LUA_LIBDIR)
-	cp $(LIB) $(LUA_LIBDIR)/$(LIB)
+	install -m 0644 -D -T $(LIB) $(LUA_LIBDIR)/$(LIB)
 
 ###########################################################################
 
