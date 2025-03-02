@@ -235,10 +235,8 @@ Clone lua-periphery recursively to also fetch [c-periphery](https://github.com/v
 $ git clone --recursive https://github.com/vsergeev/lua-periphery.git
 $ cd lua-periphery
 $ make clean all
-$ cp periphery.so /path/to/lua/libs/
+$ sudo make install
 ```
-
-Place `periphery.so` in a directory searched by the Lua `package.cpath` variable. For example: `/usr/lib/lua/5.3/`, the same directory as other Lua sources, etc.
 
 lua-periphery can then be loaded in lua with `periphery = require('periphery')`.
 
