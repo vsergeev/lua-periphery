@@ -1,8 +1,8 @@
 package = "lua-periphery"
-version = "2.4.2-1"
+version = "2.4.3-1"
 source = {
     url = "gitrec+https://github.com/vsergeev/lua-periphery",
-    tag = "v2.4.2",
+    tag = "v2.4.3",
 }
 description = {
     summary = "Linux Peripheral I/O (GPIO, LED, PWM, SPI, I2C, MMIO, Serial) with Lua",
