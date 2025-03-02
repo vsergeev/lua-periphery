@@ -1,3 +1,11 @@
+* v2.4.3 - 03/02/2025
+    * Bump c-periphery dependency version to v2.4.3 for build fix of character
+      device GPIO support tests with alternate shells and older versions of
+      make.
+    * Improve standalone install in Makefile.
+    * Contributors
+        * Francois Perrad, @fperrad - 9a9519c, 1c0804e
+
 * v2.4.2 - 07/05/2023
     * Bump c-periphery dependency version to v2.4.2 for build fix of GPIO under
       Linux kernel headers missing realtime event timestamp support in the
