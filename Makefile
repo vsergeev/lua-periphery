@@ -41,7 +41,7 @@ clean:
 
 .PHONY: install
 install:
-	install -m 0644 -D -T $(LIB) $(LUA_LIBDIR)/$(LIB)
+	install -m 0644 -D $(LIB) $(LUA_LIBDIR)/$(LIB)
 
 ###########################################################################
 
