@@ -1,3 +1,6 @@
+* v2.5.1 - 10/06/2026
+    * Fix standalone install with BusyBox in Makefile.
+
 * v2.5.0 - 11/02/2025
     * Bump c-periphery dependency version to v2.5.0 for new APIs in MMIO, SPI,
       GPIO, LED.
