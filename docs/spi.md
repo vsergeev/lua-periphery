@@ -22,7 +22,7 @@ spi:close()
 spi.fd              immutable <number>
 spi.mode            mutable <number>
 spi.max_speed       mutable <number>
-spi.bit_order       mutable <number>
+spi.bit_order       mutable <string>
 spi.bits_per_word   mutable <number>
 spi.extra_flags     mutable <number>
 ```
