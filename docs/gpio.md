@@ -93,6 +93,8 @@ Instantiate a GPIO object and open the character device GPIO with the specified 
 
 Interrupt edge can be "none", "rising", "falling", or "both" (see [constants](#constants) above). Event clock can be "realtime", "monotonic", or "hte" (see [constants](#constants) above). Debounce period is in microseconds. Line bias can be "default", "pull_up", "pull_down", or "disable" (see [constants](#constants) above). Line drive can be "default", "open_drain", or "open_source" (see [constants](#constants) above). Inverted (active low) can be true or false. Label can be a string or nil for the default consumer label.
 
+For v1 character device GPIOs, debounce period is not supported, and only the "realtime" event clock is supported. Line bias is not supported by v1 character device GPIOs built with Linux kernel headers older than version 5.5.
+
 Example:
 ``` lua
 -- Open GPIO 23 with output direction
@@ -214,7 +216,9 @@ Property gpio.event_clock   mutable <string>
 ```
 Get or set the GPIO's event clock. Can be "realtime", "monotonic", or "hte" (see [constants](#constants) above).
 
-Raises a [GPIO error](#errors) on assignment with an invalid event clock.
+This property is not supported by sysfs GPIOs. For v1 character device GPIOs, only the "realtime" event clock is supported.
+
+Raises a [GPIO error](#errors) on assignment with an invalid event clock or if unsupported by the GPIO type or ABI version.
 
 --------------------------------------------------------------------------------
 
@@ -223,7 +227,9 @@ Property gpio.debounce_us   mutable <number>
 ```
 Get or set the GPIO's debounce period in microseconds.
 
-Raises a [GPIO error](#errors) on assignment with an invalid debounce period.
+This property is not supported by sysfs GPIOs or v1 character device GPIOs.
+
+Raises a [GPIO error](#errors) on assignment with an invalid debounce period or if unsupported by the GPIO type or ABI version.
 
 --------------------------------------------------------------------------------
 
@@ -232,7 +238,7 @@ Property gpio.bias          mutable <string>
 ```
 Get or set the GPIO's line bias. Can be "default", "pull_up", "pull_down", or "disable" (see [constants](#constants) above).
 
-This property is not supported by sysfs GPIOs.
+This property is not supported by sysfs GPIOs, or v1 character device GPIOs built with Linux kernel headers older than version 5.5.
 
 Raises a [GPIO error](#errors) on assignment with an invalid line bias or if unsupported by the GPIO type.
 
