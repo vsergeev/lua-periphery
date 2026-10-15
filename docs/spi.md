@@ -80,7 +80,7 @@ spi:transfer_advanced(messages <table>)
 ```
 Transfer messages. Modifies the `messages` table with shifted in words.
 
-The messages table is an array of message tables. Each message table is an array of bytes or a single byte string, with optional `deselect`, `deselect_delay_us`, and `word_delay_us` fields. If `deselect` is true, deselect the device before reselecting it for the following transfer. `deselect_delay_us` specifies a delay in microseconds before deselection when `deselect` is true. `word_delay_us` specifies a delay in microseconds between words within a transfer. Note that `deselect_delay_us` and `word_delay_us` may not by supported by all SPI controllers and may be silently ignored.
+The messages table is an array of message tables. Each message table is an array of bytes or a single byte string, with optional `deselect`, `deselect_delay_us`, and `word_delay_us` fields. If `deselect` is true, deselect the device before reselecting it for the following transfer. `deselect_delay_us` specifies a delay in microseconds before deselection when `deselect` is true. `word_delay_us` specifies a delay in microseconds between words within a transfer. Note that `deselect_delay_us` and `word_delay_us` may not be supported by all SPI controllers and may be silently ignored.
 
 Example:
 ``` lua
