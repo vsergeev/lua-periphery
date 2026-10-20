@@ -1,3 +1,13 @@
+* v2.5.2 - 10/20/2026
+    * Bump c-periphery dependency version to v2.5.1 for minor API improvements
+      with GPIOs using the gpio-cdev v1 ABI.
+    * I2C
+        * Fix typos in documentation.
+    * SPI
+        * Fix typos in documentation.
+    * GPIO
+        * Clarify supported properties for gpio-cdev v1 ABI in documentation.
+
 * v2.5.1 - 10/06/2026
     * Fix standalone install with BusyBox in Makefile.
 
