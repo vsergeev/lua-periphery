@@ -1,3 +1,7 @@
+* v2.5.3 - 11/04/2026
+    * Bump c-periphery dependency version to v2.5.2 for fix of GPIO debounce
+      period configuration in the gpio-cdev v2 implementation.
+
 * v2.5.2 - 10/20/2026
     * Bump c-periphery dependency version to v2.5.1 for minor API improvements
       with GPIOs using the gpio-cdev v1 ABI.
