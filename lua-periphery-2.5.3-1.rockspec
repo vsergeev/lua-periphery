@@ -1,9 +1,9 @@
 rockspec_format = "3.0"
 package = "lua-periphery"
-version = "2.5.2-1"
+version = "2.5.3-1"
 source = {
     url = "git+https://github.com/vsergeev/lua-periphery",
-    tag = "v2.5.2",
+    tag = "v2.5.3",
 }
 description = {
     summary = "Linux Peripheral I/O (GPIO, LED, PWM, SPI, I2C, MMIO, Serial) with Lua",
